@@ -3,6 +3,7 @@ import { FlatList, Platfrom, ScrollView, Slider, StatusBar, StyleSheet, Switch, 
 import { createSwitchNavigator, createAppContainer } from "react-navigation";
 import { AppLoading } from 'expo';
 import SignInScreen from './src/screens/SingInScreen';
+import LogInScreen from './src/screens/LogInScreen';
 import TextInputField from './src/components/TextInputField';
 
 export default class App extends React.Component {
@@ -10,11 +11,9 @@ export default class App extends React.Component {
     return (
       <>
       <View style = {styles.root}>
-        <SignInScreen/>
+        <LogInScreen/>
       </View>
       </>
-        
-        
     );
   }
 }
