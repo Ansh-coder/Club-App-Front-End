@@ -1,18 +1,30 @@
 import React from 'react';
 import { FlatList, Platfrom, ScrollView, Slider, StatusBar, StyleSheet, Switch, Text, TouchableWithoutFeedback, View } from 'react-native';
-import { createSwitchNavigator, createAppContainer } from "react-navigation";
+// import { createSwitchNavigator, createAppContainer } from "react-navigation";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
 import { AppLoading } from 'expo';
-import SignInScreen from './src/screens/SingInScreen';
+import SignInScreen from './src/screens/SignInScreen';
 import LogInScreen from './src/screens/LogInScreen';
 import TextInputField from './src/components/TextInputField';
+
+
+
+const Stack = createNativeStackNavigator();
 
 export default class App extends React.Component {
   render(){
     return (
       <>
-      <View style = {styles.root}>
-        <LogInScreen/>
-      </View>
+      
+      <NavigationContainer >
+        <Stack.Navigator initialRouteName = "LogIn">
+          <Stack.Screen name = "LogIn" component = {LogInScreen}/>
+          <Stack.Screen name = "SignIn" component = {SignInScreen}/>
+          
+        </Stack.Navigator>
+      </NavigationContainer>
+
       </>
     );
   }

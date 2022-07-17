@@ -1,10 +1,12 @@
-import { StyleSheet, Text, TextInput, Button,  View, SafeAreaView, Image, useWindowDimensions } from 'react-native'
+import { StyleSheet, Text, TextInput, Button,  View, SafeAreaView, Image, useWindowDimensions, TouchableOpacity } from 'react-native'
 import Logo from '../../../assets/favicon.png';
 import React from 'react'
 import NextFunctionForApp from '../NextFunctionForApp';
 import TxtInputforLogIn from '../../components/TxtInputforLogIn';
+import SignInScreen from '../SignInScreen';
 
-const LogInScreen = () => {
+
+function LogInScreen ( {navigation}) {
 const {height} = useWindowDimensions();
 
   return (
@@ -14,6 +16,14 @@ const {height} = useWindowDimensions();
     </View>
     <View>
       <TxtInputforLogIn/>
+    </View>
+    <View>
+      <TouchableOpacity 
+        style = {styles.signUpButton}
+        onPress = {()=> navigation.navigate('SignIn')}>
+          <Text>Don't have an account? Sign Up!</Text>
+      </TouchableOpacity>
+
     </View>
     </>
   )
@@ -46,5 +56,12 @@ const styles = StyleSheet.create ({
       margin: 10,
       color: '#5feaf8',
       fontFamily: 'Futura'
+    },
+    signUpButton: {
+      justifyContent: "center",
+      alignItems: "center",
+      color: "#FFFFFF",
+      margin: 100,
+      marginHorizontal: 850
     }
 })
