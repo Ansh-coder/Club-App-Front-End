@@ -17,13 +17,15 @@ const {height} = useWindowDimensions();
     <View>
       <TxtInputforLogIn/>
     </View>
-    <View>
+    <View style = {styles.root}>
+      <Text style = {styles.styleOfText}>Don't have an account?</Text>
+    </View>
+    <View style = {styles.root}>
       <TouchableOpacity 
         style = {styles.signUpButton}
         onPress = {()=> navigation.navigate('SignIn')}>
-          <Text>Don't have an account? Sign Up!</Text>
+          <Text>SIGN UP</Text>
       </TouchableOpacity>
-
     </View>
     </>
   )
@@ -35,13 +37,13 @@ const styles = StyleSheet.create ({
     root: {
       alignItems: 'center',
       padding: 20,
-      backgroundColor: '#440bd4'
+      backgroundColor: '#fffde4'
     },
     logo: {
         width: '70%', 
         maxWidth: 400,
         maxHeight: 250,
-        top: 50,
+        margin: 20
     },
     input: {
       width: 300,
@@ -60,8 +62,18 @@ const styles = StyleSheet.create ({
     signUpButton: {
       justifyContent: "center",
       alignItems: "center",
+      backgroundColor: '#CD8B49',
       color: "#FFFFFF",
-      margin: 100,
-      marginHorizontal: 850
+      width: 75,
+      height: 30,
+      borderRadius: 2,
+      fontFamily: 'Futura',
+      fontSize: 16
+    },
+    styleOfText: {
+      marginTop: 50,
+      fontFamily: 'Futura',
+      fontSize: 16,
+      color: '#CD8B49'
     }
 })

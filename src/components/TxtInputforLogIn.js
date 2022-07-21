@@ -1,6 +1,8 @@
-import { StyleSheet, Text, TextInput, Button,  View, SafeAreaView, Image, useWindowDimensions } from 'react-native'
+import { StyleSheet, Text, TextInput, Button,  View, SafeAreaView, Image, useWindowDimensions, TouchableOpacity } from 'react-native'
 import React from 'react'
 import NextFunctionForApp from '../../src/screens/NextFunctionForApp';
+import { LinearGradient } from "expo-linear-gradient";
+import { Animated } from "react-native";
 
 const TxtInputforLogIn  = () => {
 
@@ -12,13 +14,12 @@ const TxtInputforLogIn  = () => {
 
   return (
     <SafeAreaView style = {styles.root}>
-      <>
       <TextInput
         style={styles.input}
         onChangeText={onChangeEmail}
         value={email}
         placeholder="Your Email"
-        placeholderTextColor = '#708cbc'
+        placeholderTextColor = '#D5B877'
       />
       <TextInput
         style={styles.input}
@@ -26,16 +27,15 @@ const TxtInputforLogIn  = () => {
         onChangeText={onChangePassword}
         value={password}
         placeholder="Your Password"
-        placeholderTextColor = '#708cbc'
+        placeholderTextColor = '#D5B877'
       />
-      <Button
-        onPress = {NextFunctionForApp}
-        title = 'Log In'
-        color = '#5feaf8'
-        accessibilityLabel="Press this button to log in to the app"
-        type = 'submit'
-      />
-    </>
+      <TouchableOpacity 
+        style = {styles.logInButton}
+        disabled = {!email || !password}
+        onPress = {NextFunctionForApp}>
+          <Text>LOG IN</Text>
+      </TouchableOpacity>
+    
     </SafeAreaView>
 
   )
@@ -45,29 +45,38 @@ const styles = StyleSheet.create ({
   root: {
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#440bd4',
-    top: 75
+    backgroundColor: '#fffde4',
   },
   logo: {
       width: '70%', 
       maxWidth: 400,
       maxHeight: 250,
-      top: 50,
   },
   input: {
     width: 300,
     height: 40,
-    backgroundColor: '#000000',
+    backgroundColor: '#fffde4',
     paddingVertical: 10,
     paddingHorizontal: 15,
-    borderColor: '#5feaf8',
-    borderWidth: 1,
-    borderRadius: 15, 
+    borderColor: '#644614',
+    borderBottomWidth: 3,
+    borderRadius: 3,
     fontSize: 16,
     margin: 10,
-    color: '#5feaf8',
+    color: '#000000',
     fontFamily: 'Futura'
-  }
+  },
+  logInButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: '#CD8B49',
+    color: "#FFFFFF",
+    width: 75,
+    height: 30,
+    borderRadius: 2,
+    fontFamily: 'Futura',
+    fontSize: 16
+  },
 })
 
 export default TxtInputforLogIn

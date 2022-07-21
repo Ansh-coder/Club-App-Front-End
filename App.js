@@ -33,7 +33,7 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    backgroundColor: '#440bd4'
+    backgroundColor: '#fffde4'
   }
   }
 

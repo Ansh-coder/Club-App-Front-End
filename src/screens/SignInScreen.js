@@ -27,15 +27,14 @@ const styles = StyleSheet.create ({
     root: {
       alignItems: 'center',
       padding: 20,
-      backgroundColor: '#440bd4'
+      backgroundColor: '#fffde4'
     },
     logo: {
+        margin: 20,
         width: '70%', 
         maxWidth: 400,
         maxHeight: 250,
-        top: 50,
     },
 })
 
 export default SignInScreen
-

@@ -1,4 +1,4 @@
- import { View, SafeAreaView, Text, StyleSheet, TextInput, useWindowDimensions, Button} from 'react-native'
+ import { View, SafeAreaView, Text, StyleSheet, TextInput, useWindowDimensions, Button, TouchableOpacity} from 'react-native'
  import React, { useState } from "react";
  import NextFunctionForApp from '../screens/NextFunctionForApp';
  
@@ -22,21 +22,21 @@
         onChangeText={onChangefirstName}
         value={firstName}
         placeholder="Your First Name"
-        placeholderTextColor = '#708cbc'
+        placeholderTextColor = '#D5B877'
       />
       <TextInput
         style={styles.input}
         onChangeText={onChangelastName}
         value={lastName}
         placeholder="Your Last Name"
-        placeholderTextColor = '#708cbc'
+        placeholderTextColor = '#D5B877'
       />
       <TextInput
         style={styles.input}
         onChangeText={onChangeEmail}
         value={email}
         placeholder="Your Email"
-        placeholderTextColor = '#708cbc'
+        placeholderTextColor = '#D5B877'
       />
       <TextInput
         style={styles.input}
@@ -44,7 +44,7 @@
         onChangeText={onChangePassword}
         value={password}
         placeholder="Your Password"
-        placeholderTextColor = '#708cbc'
+        placeholderTextColor = '#D5B877'
       />
       <TextInput
         style={styles.input}
@@ -52,16 +52,15 @@
         onChangeText={onChangeReEnterPassword}
         value={reenterpassword}
         placeholder="Re-enter Password"
-        placeholderTextColor = '#708cbc'
+        placeholderTextColor = '#D5B877'
       />
-      <Button
+
+      <TouchableOpacity 
+        style = {styles.signUpButton}
         onPress = {NextFunctionForApp}
-        title = 'Sign Up'
-        color = '#5feaf8'
-        accessibilityLabel="Press this button to sign up with your given information"
-        type = 'submit'
-        disabled={!firstName || !lastName || !email || !password || !reenterpassword || password !== reenterpassword}
-      />
+        disabled = {!firstName || !lastName || !email || !password || !reenterpassword || password !== reenterpassword }>
+          <Text>SIGN UP</Text>
+      </TouchableOpacity>
     </SafeAreaView>
     </> 
    )
@@ -69,24 +68,35 @@
  
 const styles = StyleSheet.create({
     root: {
-      top: 75,
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      backgroundColor: '#fffde4'
     },
     input: {
       width: 300,
       height: 40,
-      backgroundColor: '#000000',
+      backgroundColor: '#fffde4',
       paddingVertical: 10,
       paddingHorizontal: 15,
-      borderColor: '#5feaf8',
-      borderWidth: 1,
-      borderRadius: 15, 
+      borderColor: '#644614',
+      borderBottomWidth: 3,
+      borderRadius: 3, 
       fontSize: 16,
       margin: 10,
-      color: '#5feaf8',
+      color: '#000000',
       fontFamily: 'Futura'
-    }
+    },
+    signUpButton: {
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: '#CD8B49',
+      color: "#FFFFFF",
+      width: 75,
+      height: 30,
+      borderRadius: 2,
+      fontFamily: 'Futura',
+      fontSize: 16
+    },
 })
 
  export default TextInputField
