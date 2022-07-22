@@ -18,9 +18,9 @@ export default class App extends React.Component {
       <>
       
       <NavigationContainer >
-        <Stack.Navigator initialRouteName = "LogIn">
-          <Stack.Screen name = "LogIn" component = {LogInScreen}/>
-          <Stack.Screen name = "SignIn" component = {SignInScreen}/>
+        <Stack.Navigator initialRouteName = "Log In">
+          <Stack.Screen name = "Log In" component = {LogInScreen}/>
+          <Stack.Screen name = "Sign In" component = {SignInScreen}/>
           
         </Stack.Navigator>
       </NavigationContainer>

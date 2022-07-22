@@ -60,9 +60,8 @@ const styles = StyleSheet.create ({
     paddingHorizontal: 15,
     borderColor: '#644614',
     borderBottomWidth: 3,
-    borderRadius: 3,
     fontSize: 16,
-    margin: 10,
+    margin: 15,
     color: '#000000',
     fontFamily: 'Futura'
   },
@@ -75,7 +74,8 @@ const styles = StyleSheet.create ({
     height: 30,
     borderRadius: 2,
     fontFamily: 'Futura',
-    fontSize: 16
+    fontSize: 16,
+    margin: 20
   },
 })
 

@@ -23,7 +23,7 @@ const {height} = useWindowDimensions();
     <View style = {styles.root}>
       <TouchableOpacity 
         style = {styles.signUpButton}
-        onPress = {()=> navigation.navigate('SignIn')}>
+        onPress = {()=> navigation.navigate('Sign In')}>
           <Text>SIGN UP</Text>
       </TouchableOpacity>
     </View>
@@ -43,7 +43,7 @@ const styles = StyleSheet.create ({
         width: '70%', 
         maxWidth: 400,
         maxHeight: 250,
-        margin: 20
+        margin: 20,
     },
     input: {
       width: 300,
@@ -71,7 +71,7 @@ const styles = StyleSheet.create ({
       fontSize: 16
     },
     styleOfText: {
-      marginTop: 50,
+      marginTop: 75,
       fontFamily: 'Futura',
       fontSize: 16,
       color: '#CD8B49'

@@ -1,4 +1,4 @@
- import { View, SafeAreaView, Text, StyleSheet, TextInput, useWindowDimensions, Button, TouchableOpacity} from 'react-native'
+ import { View, SafeAreaView, Text, StyleSheet, TextInput, useWindowDimensions, Button, TouchableOpacity, ImageBackground} from 'react-native'
  import React, { useState } from "react";
  import NextFunctionForApp from '../screens/NextFunctionForApp';
  
@@ -54,7 +54,6 @@
         placeholder="Re-enter Password"
         placeholderTextColor = '#D5B877'
       />
-
       <TouchableOpacity 
         style = {styles.signUpButton}
         onPress = {NextFunctionForApp}
@@ -80,9 +79,8 @@ const styles = StyleSheet.create({
       paddingHorizontal: 15,
       borderColor: '#644614',
       borderBottomWidth: 3,
-      borderRadius: 3, 
       fontSize: 16,
-      margin: 10,
+      margin: 15,
       color: '#000000',
       fontFamily: 'Futura'
     },
@@ -95,7 +93,8 @@ const styles = StyleSheet.create({
       height: 30,
       borderRadius: 2,
       fontFamily: 'Futura',
-      fontSize: 16
+      fontSize: 16,
+      margin: 20
     },
 })
 
