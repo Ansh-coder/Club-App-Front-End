@@ -1,15 +1,15 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const NextFunctionForApp = () => {
+const DashboardScreen = () => {
   return (
     <View>
-      <Text>NextFunctionForApp</Text>
+      <Text>the dashboard</Text>
     </View>
   )
 }
 
-export default NextFunctionForApp
+export default DashboardScreen
 
 const styles = StyleSheet.create({
 

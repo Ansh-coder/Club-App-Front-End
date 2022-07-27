@@ -1,12 +1,16 @@
 import { StyleSheet, Text, TextInput, Button,  View, SafeAreaView, Image, useWindowDimensions, TouchableOpacity } from 'react-native'
 import Logo from '../../../assets/favicon.png';
 import React from 'react'
-import NextFunctionForApp from '../NextFunctionForApp';
-import TxtInputforLogIn from '../../components/TxtInputforLogIn';
+import DashboardScreen from '../NextFunctionForApp';
 import SignInScreen from '../SignInScreen';
 
 
 function LogInScreen ( {navigation}) {
+
+const [email, onChangeEmail] = React.useState(null);
+const [password, onChangePassword] = React.useState(null);
+
+const {width} = useWindowDimensions();
 const {height} = useWindowDimensions();
 
   return (
@@ -15,7 +19,30 @@ const {height} = useWindowDimensions();
         <Image source = {Logo} style = {[styles.logo, {height: height*0.2}]} resizeMode = "contain"/>
     </View>
     <View>
-      <TxtInputforLogIn/>
+    <SafeAreaView style = {styles.root}>
+      <TextInput
+        style={styles.input}
+        onChangeText={onChangeEmail}
+        value={email}
+        placeholder="Your Email"
+        placeholderTextColor = '#D5B877'
+      />
+      <TextInput
+        style={styles.input}
+        secureTextEntry = {true}
+        onChangeText={onChangePassword}
+        value={password}
+        placeholder="Your Password"
+        placeholderTextColor = '#D5B877'
+      />
+      <TouchableOpacity 
+        style = {styles.logInButton}
+        disabled = {!email || !password}
+        onPress = {()=> navigation.navigate('Dashboard')}>
+          <Text>LOG IN</Text>
+      </TouchableOpacity>
+    
+    </SafeAreaView>
     </View>
     <View style = {styles.root}>
       <Text style = {styles.styleOfText}>Don't have an account?</Text>
@@ -48,15 +75,14 @@ const styles = StyleSheet.create ({
     input: {
       width: 300,
       height: 40,
-      backgroundColor: '#000000',
+      backgroundColor: '#fffde4',
       paddingVertical: 10,
       paddingHorizontal: 15,
-      borderColor: '#5feaf8',
-      borderWidth: 1,
-      borderRadius: 15, 
+      borderColor: '#644614',
+      borderBottomWidth: 3,
       fontSize: 16,
-      margin: 10,
-      color: '#5feaf8',
+      margin: 15,
+      color: '#000000',
       fontFamily: 'Futura'
     },
     signUpButton: {
@@ -75,5 +101,17 @@ const styles = StyleSheet.create ({
       fontFamily: 'Futura',
       fontSize: 16,
       color: '#CD8B49'
-    }
+    },
+    logInButton: {
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: '#CD8B49',
+      color: "#FFFFFF",
+      width: 75,
+      height: 30,
+      borderRadius: 2,
+      fontFamily: 'Futura',
+      fontSize: 16,
+      margin: 20
+    },
 })
