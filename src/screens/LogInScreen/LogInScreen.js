@@ -97,7 +97,7 @@ const styles = StyleSheet.create ({
       fontSize: 16
     },
     styleOfText: {
-      marginTop: 75,
+      marginTop: '12.5%',
       fontFamily: 'Futura',
       fontSize: 16,
       color: '#CD8B49'
