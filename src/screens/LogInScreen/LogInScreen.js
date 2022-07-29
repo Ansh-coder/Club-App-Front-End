@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TextInput, Button,  View, SafeAreaView, Image, useWindowDimensions, TouchableOpacity } from 'react-native'
 import Logo from '../../../assets/favicon.png';
 import React from 'react'
-import DashboardScreen from '../NextFunctionForApp';
+import MainScreen from '../MainScreen';
 import SignInScreen from '../SignInScreen';
 
 
@@ -38,7 +38,7 @@ const {height} = useWindowDimensions();
       <TouchableOpacity 
         style = {styles.logInButton}
         disabled = {!email || !password}
-        onPress = {()=> navigation.navigate('Dashboard')}>
+        onPress = {()=> navigation.navigate('Main Screen')}>
           <Text>LOG IN</Text>
       </TouchableOpacity>
     
@@ -70,7 +70,7 @@ const styles = StyleSheet.create ({
         width: '70%', 
         maxWidth: 400,
         maxHeight: 250,
-        margin: 20,
+        margin: 50,
     },
     input: {
       width: 300,

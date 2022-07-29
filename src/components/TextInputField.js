@@ -1,6 +1,6 @@
 import { View, SafeAreaView, Text, StyleSheet, TextInput, useWindowDimensions, Button, TouchableOpacity, ImageBackground} from 'react-native'
 import React, { useState } from "react";
-import NextFunctionForApp from '../screens/NextFunctionForApp';
+import NextFunctionForApp from '../screens/MainScreen';
 
 const TextInputField = () => {
  const [firstName, onChangefirstName] = React.useState(null);
@@ -89,6 +89,12 @@ const TextInputField = () => {
        disabled = {!firstName || !lastName || !email || !password || !reenterpassword || password !== reenterpassword }>
          <Text>SIGN UP</Text>
      </TouchableOpacity>
+     <Text style = {styles.styleOfText}>Already have an account?</Text>
+     <TouchableOpacity 
+       style = {styles.signUpButton}
+       onPress = {()=> navigation.navigate('Log In')}>
+         <Text>LOG IN</Text>
+     </TouchableOpacity>
    </SafeAreaView>
    </> 
   )
@@ -125,6 +131,12 @@ const styles = StyleSheet.create({
      fontSize: 16,
      margin: 20
    },
+   styleOfText: {
+    marginTop: '12.5%',
+    fontFamily: 'Futura',
+    fontSize: 16,
+    color: '#CD8B49'
+  }
 })
 
 export default TextInputField

@@ -1,16 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-const DashboardScreen = () => {
+function DashboardScreen () {
   return (
     <View>
-      <Text>the dashboard</Text>
+      <Text>Dashboard</Text>
     </View>
   )
 }
 
 export default DashboardScreen
 
-const styles = StyleSheet.create({
-
-})
+const styles = StyleSheet.create({})

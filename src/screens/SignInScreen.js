@@ -30,7 +30,7 @@ const styles = StyleSheet.create ({
       backgroundColor: '#fffde4'
     },
     logo: {
-        margin: 20,
+        margin: 50,
         width: '70%', 
         maxWidth: 400,
         maxHeight: 250,

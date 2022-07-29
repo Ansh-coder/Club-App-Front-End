@@ -7,7 +7,7 @@ import { AppLoading } from 'expo';
 import SignInScreen from './src/screens/SignInScreen';
 import LogInScreen from './src/screens/LogInScreen';
 import TextInputField from './src/components/TextInputField';
-import DashboardScreen from './src/screens/NextFunctionForApp';
+import MainScreen from './src/screens/MainScreen';
 
 
 
@@ -19,12 +19,16 @@ export default class App extends React.Component {
     return (
       <>
       
-      <NavigationContainer >
-        <Stack.Navigator initialRouteName = "Log In">
+      <NavigationContainer>
+        <Stack.Navigator 
+        initialRouteName = "Log In"
+        screenOptions={{
+          headerShown: false
+          }}
+        >
           <Stack.Screen name = "Log In" component = {LogInScreen}/>
           <Stack.Screen name = "Sign In" component = {SignInScreen}/>
-          <Stack.Screen name = "Dashboard" component = {DashboardScreen}/>
-          
+          <Stack.Screen name = "Main Screen" component = {MainScreen}/> 
         </Stack.Navigator>
       </NavigationContainer>
 
