@@ -15,8 +15,6 @@ const SignInScreen = () => {
   <View>
     <TextInputField/>
   </View>
-  <View>
-  </View>
   </>
 
     

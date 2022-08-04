@@ -22,13 +22,16 @@ export default class App extends React.Component {
       <NavigationContainer>
         <Stack.Navigator 
         initialRouteName = "Log In"
-        screenOptions={{
-          headerShown: false
-          }}
         >
           <Stack.Screen name = "Log In" component = {LogInScreen}/>
-          <Stack.Screen name = "Sign In" component = {SignInScreen}/>
-          <Stack.Screen name = "Main Screen" component = {MainScreen}/> 
+          <Stack.Screen name = "Sign Up" component = {SignInScreen}/>
+          <Stack.Screen 
+          name = "Main Screen" 
+          component = {MainScreen}
+          options={{
+            headerShown: false
+            }}
+          /> 
         </Stack.Navigator>
       </NavigationContainer>
 

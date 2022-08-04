@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View} from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react'
 import { createDrawerNavigator, DrawerItem } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
@@ -20,6 +21,17 @@ function logOutIcon () {
     color = 'black'
     />
 }
+
+
+
+
+var JWT = async function getToken() {
+  return await AsyncStorage.getItem('token');
+}
+
+JWT()
+
+console.log(JWT());
 
     return (
         <>

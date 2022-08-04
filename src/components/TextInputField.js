@@ -3,11 +3,11 @@ import React, { useState } from "react";
 import NextFunctionForApp from '../screens/MainScreen';
 
 const TextInputField = () => {
- const [firstName, onChangefirstName] = React.useState(null);
- const [lastName, onChangelastName] = React.useState(null);
- const [email, onChangeEmail] = React.useState(null);
- const [password, onChangePassword] = React.useState(null);
- const [reenterpassword, onChangeReEnterPassword] = React.useState(null);
+ var [firstName, onChangefirstName] = React.useState(null);
+ var [lastName, onChangelastName] = React.useState(null);
+ var [email, onChangeEmail] = React.useState(null);
+ var [password, onChangePassword] = React.useState(null);
+ var [reenterpassword, onChangeReEnterPassword] = React.useState(null);
 
  const [disable, setDisable] = React.useState(false);
 
@@ -18,7 +18,6 @@ const TextInputField = () => {
    // Default options are marked with *
    const response = await fetch(url, {
      method: 'POST', // *GET, POST, PUT, DELETE, etc.
-     mode: 'no-cors', // no-cors, *cors, same-origin
      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
      headers: {
        'Content-Type': 'application/json'
@@ -88,12 +87,6 @@ const TextInputField = () => {
        onPress = {onSubmit}
        disabled = {!firstName || !lastName || !email || !password || !reenterpassword || password !== reenterpassword }>
          <Text>SIGN UP</Text>
-     </TouchableOpacity>
-     <Text style = {styles.styleOfText}>Already have an account?</Text>
-     <TouchableOpacity 
-       style = {styles.signUpButton}
-       onPress = {()=> navigation.navigate('Log In')}>
-         <Text>LOG IN</Text>
      </TouchableOpacity>
    </SafeAreaView>
    </> 

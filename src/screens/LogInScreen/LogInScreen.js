@@ -1,17 +1,30 @@
 import { StyleSheet, Text, TextInput, Button,  View, SafeAreaView, Image, useWindowDimensions, TouchableOpacity } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Logo from '../../../assets/favicon.png';
 import React from 'react'
 import MainScreen from '../MainScreen';
 import SignInScreen from '../SignInScreen';
+import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
 
 
 function LogInScreen ( {navigation}) {
 
-const [email, onChangeEmail] = React.useState(null);
-const [password, onChangePassword] = React.useState(null);
+var [email, onChangeEmail] = React.useState(null);
+var [password, onChangePassword] = React.useState(null);
 
 const {width} = useWindowDimensions();
 const {height} = useWindowDimensions();
+
+async function setToken() {
+  try {
+    await AsyncStorage.setItem('token', user.token);
+  } catch (error) {
+    console.log('AsyncStorage error: ' + error.message);
+  }
+}
+
+setToken()
+
 
   return (
     <>
@@ -50,7 +63,7 @@ const {height} = useWindowDimensions();
     <View style = {styles.root}>
       <TouchableOpacity 
         style = {styles.signUpButton}
-        onPress = {()=> navigation.navigate('Sign In')}>
+        onPress = {()=> navigation.navigate('Sign Up')}>
           <Text>SIGN UP</Text>
       </TouchableOpacity>
     </View>
