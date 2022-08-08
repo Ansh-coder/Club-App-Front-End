@@ -25,13 +25,7 @@ function logOutIcon () {
 
 
 
-var JWT = async function getToken() {
-  return await AsyncStorage.getItem('token');
-}
 
-JWT()
-
-console.log(JWT());
 
     return (
         <>

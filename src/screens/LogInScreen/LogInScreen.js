@@ -9,13 +9,33 @@ import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
 
 function LogInScreen ( {navigation}) {
 
-var [email, onChangeEmail] = React.useState(null);
-var [password, onChangePassword] = React.useState(null);
+var [email, onChangeEmail] = React.useState('test1234@user.com');
+var [password, onChangePassword] = React.useState('test123');
 
 const {width} = useWindowDimensions();
 const {height} = useWindowDimensions();
 
-async function setToken() {
+
+const onSubmit = async () => {
+  console.log('submit')
+  console.log(email)
+  console.log(password)
+
+
+      const login = await fetch('http://localhost:3000/users/login?' + new URLSearchParams({
+          email: email,
+          password: password,
+
+          
+      }))
+
+      const user = await login.json()
+      console.log(user)
+      await AsyncStorage.setItem('token', user.token);
+      navigation.navigate('Main Screen')
+}
+
+async function setToken(user) {
   try {
     await AsyncStorage.setItem('token', user.token);
   } catch (error) {
@@ -23,7 +43,6 @@ async function setToken() {
   }
 }
 
-setToken()
 
 
   return (
@@ -51,7 +70,7 @@ setToken()
       <TouchableOpacity 
         style = {styles.logInButton}
         disabled = {!email || !password}
-        onPress = {()=> navigation.navigate('Main Screen')}>
+        onPress = {onSubmit}>
           <Text>LOG IN</Text>
       </TouchableOpacity>
     
