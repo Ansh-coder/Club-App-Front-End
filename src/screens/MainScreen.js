@@ -4,7 +4,6 @@ import React from 'react'
 import { createDrawerNavigator, DrawerItem } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import DashboardScreen from './MainScreenComponents/DashboardScreen';
-import TestDashboard from './MainScreenComponents/TestDashboard';
 import SettingsScreen from './MainScreenComponents/SettingsScreen';
 import ProfileScreen from './MainScreenComponents/ProfileScreen';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
