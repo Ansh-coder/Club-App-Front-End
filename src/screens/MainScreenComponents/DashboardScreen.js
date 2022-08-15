@@ -1,53 +1,57 @@
-import { StyleSheet, Text, View, useWindowDimensions, SafeAreaView } from 'react-native'
-import React from 'react'
+import {StyleSheet, Text, View, useWindowDimensions, SafeAreaView} from 'react-native'
+import React, {useEffect, useState} from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { object } from 'prop-types'
-import { useState } from 'react'
 
-function DashboardScreen () {
-  var JWT = getToken()
-  var clubs
-  var clubJson
-  var data
-  var ClubCardComponent
+export const DashboardScreen = () => {
 
-  JWT.then(async token => {
-    clubs = await fetch('http://localhost:3000/clubs', {
-      headers: {
-        Authorization: 'jwt ' + token
-      }
-    })
-    clubJson = await clubs.json()
-      console.log(clubJson)
-      console.log(clubs)
+    const {isLoading, lists} = loadData();
 
-      data = clubJson.map(function(club) {
-        return {
-          key: club._id,
-          name: club.name
-      };
-    });
-      console.log(data)
-      console.log(data[0].name)
-  })
+    if (isLoading) return <h2>Loading...</h2>
 
-  return(
-    <View>
-      <Text>DashboardScreen</Text>
-    </View>
-)
+    return <div>
+        {lists.map(club => {
+            return (
+              <div key={club._id} style = {styles.card}>
+                    <h2>{club.name}</h2>
+                    <h3>{club.description}</h3>
+              </div>
+            );
+        })}
+    </div>
 }
 
+function loadData() {
+    const [isLoading, setIsLoading] = useState(true)
+    const [lists, setLists] = useState(null)
+    const load = async () => {
+        const token = await AsyncStorage.getItem('token');
+        const clubsJson = await fetch('http://localhost:3000/clubs', {
+            headers: {
+                Authorization: 'jwt ' + token
+            }
+        })
+        return clubsJson.json()
+    }
 
+    useEffect(() => {
+        setIsLoading(true)
 
-async function getToken () {
-    return await AsyncStorage.getItem('token');
-    
+        load()
+            .then((clubs) => {
+                console.log(clubs);
+                setLists(clubs)
+                setIsLoading(false)
+            })
+            .catch((err) => {
+                console.log(err)
+                return setIsLoading(false)
+            })
+    }, [])
+
+    return {isLoading, lists}
 }
 
-export default DashboardScreen
-
-const styles = StyleSheet.create({    
+const styles = StyleSheet.create({
     card: {
         alignSelf: 'center',
         justifyContent: 'center',
@@ -57,4 +61,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         margin: 20
     }
-})
+});
+
+export default DashboardScreen
