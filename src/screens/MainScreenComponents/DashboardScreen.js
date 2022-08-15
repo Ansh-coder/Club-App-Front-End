@@ -32,7 +32,9 @@ function DashboardScreen () {
   })
 
   return(
-    <View>DashboardScreen</View>
+    <View>
+      <Text>DashboardScreen</Text>
+    </View>
 )
 }
 
