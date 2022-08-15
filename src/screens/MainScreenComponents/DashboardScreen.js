@@ -1,11 +1,15 @@
 import { StyleSheet, Text, View, useWindowDimensions, SafeAreaView } from 'react-native'
 import React from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { object } from 'prop-types'
+import { useState } from 'react'
 
 function DashboardScreen () {
   var JWT = getToken()
   var clubs
-
+  var clubJson
+  var data
+  var ClubCardComponent
 
   JWT.then(async token => {
     clubs = await fetch('http://localhost:3000/clubs', {
@@ -13,27 +17,25 @@ function DashboardScreen () {
         Authorization: 'jwt ' + token
       }
     })
-      console.log(await clubs.json())
+    clubJson = await clubs.json()
+      console.log(clubJson)
       console.log(clubs)
+
+      data = clubJson.map(function(club) {
+        return {
+          key: club._id,
+          name: club.name
+      };
+    });
+      console.log(data)
+      console.log(data[0].name)
   })
-  const results = [];
 
-  for (const club of clubs.json()) {
-    results.push(
-      <div key={club._id}>
-        <Text>name: {club.name}</Text>
-        <Text>description: {club.description}</Text>
-        <hr/>
-      </div>,
-    );
-  }
-
-  return (
-    <View>
-       <div>{results}</div>
-    </View>
-  )
+  return(
+    <View>DashboardScreen</View>
+)
 }
+
 
 
 async function getToken () {
