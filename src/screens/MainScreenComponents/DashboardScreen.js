@@ -2,8 +2,11 @@ import {StyleSheet, Text, View, useWindowDimensions, SafeAreaView, TouchableOpac
 import React, {useEffect, useState} from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { LinearGradient } from 'expo-linear-gradient'
+
+
 import {ClubService} from "../../services/club.service";
 import {UserService} from "../../services/user.service";
+
 
 export const DashboardScreen = () => {
 
@@ -15,10 +18,15 @@ export const DashboardScreen = () => {
     }
 
     if (isLoading) return <Text>Loading...</Text>
+
+
+
+
     if (lists === undefined) return <Text>Something went wrong</Text>
     if (lists.length === 0) return <Text>No Clubs Here</Text>
 
     return <View>
+
 
         {lists.map(club => {
             if (club.interestMeetingRequired === true) {
@@ -33,9 +41,10 @@ export const DashboardScreen = () => {
                     <Text style = {styles.clubDescription}>{club.description}</Text>
                     <Text style = {styles.interestMeetingStyle}>{InterestMeeting}</Text>
                     <Text style = {styles.clubDescription}>Fee: ${club.fee.$numberDecimal}</Text>
-                    {/*<Text style = {styles.clubDescription}>{club.advisorId.firstName}</Text>*/}
+
+                    <Text style = {styles.advisorName}>Advisor: {club.advisorId.firstName} {club.advisorId.lastName}</Text>
                     <TouchableOpacity
-                        style = {styles.joinClubButton}
+                        style = {InterestMeeting === 'Interest Meeting Required' ? styles.disabledJoinClubButton : styles.joinClubButton}
                         onPress = {onJoinClub}
                         disabled = {InterestMeeting === 'Interest Meeting Required'}>
                         <Text>Join Club</Text>
@@ -47,7 +56,6 @@ export const DashboardScreen = () => {
 }
 
 function loadData() {
-
     const [isLoading, setIsLoading] = useState(true);
     const [clubs, setClubs] = useState([]);
     const clubService = new ClubService();
@@ -122,6 +130,24 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 5,
         borderBottomLeftRadius: 5,
     },
+    disabledJoinClubButton: {
+        justifyContent: 'center',
+        alignItems: "center",
+        backgroundColor: '#D3D3D3',
+        color: "#FFFFFF",
+        height: 30,
+        borderRadius: 2,
+        fontFamily: 'Futura',
+        fontSize: 16,
+        borderBottomRightRadius: 5,
+        borderBottomLeftRadius: 5,
+    },
+    advisorName: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        margin: 10
+    }
 });
 
 export default DashboardScreen
