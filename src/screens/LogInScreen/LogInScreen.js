@@ -15,7 +15,6 @@ var [password, onChangePassword] = React.useState('test123');
 const {width} = useWindowDimensions();
 const {height} = useWindowDimensions();
 
-
 const onSubmit = async () => {
   console.log('submit')
   console.log(email)

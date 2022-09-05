@@ -2,51 +2,77 @@ import {StyleSheet, Text, View, useWindowDimensions, SafeAreaView, TouchableOpac
 import React, {useEffect, useState} from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { LinearGradient } from 'expo-linear-gradient'
-
-
 import {ClubService} from "../../services/club.service";
 import {UserService} from "../../services/user.service";
+import jwtDecode from 'jwt-decode';
 
 
 export const DashboardScreen = () => {
 
-    const {isLoading, lists} = loadData();
+    const {isLoading, clubs, userId} = loadData();
     var InterestMeeting
 
-    const onJoinClub = () => {
-        console.log('Club Joined!')
+    async function postData(url = '', data = {}) {
+        // Default options are marked with *
+        const response = await fetch(url, {
+          method: 'POST', // *GET, POST, PUT, DELETE, etc.
+          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+          headers: {
+            'Content-Type': 'application/json'
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          redirect: 'follow', // manual, *follow, error
+          referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+          body: JSON.stringify(data) // body data type must match "Content-Type" header
+        });
+        return response.json(); // parses JSON response into native JavaScript
     }
+
 
     if (isLoading) return <Text>Loading...</Text>
 
 
 
 
-    if (lists === undefined) return <Text>Something went wrong</Text>
-    if (lists.length === 0) return <Text>No Clubs Here</Text>
-
+    if (clubs === undefined) return <Text>Something went wrong</Text>
+    if (clubs.length === 0) return <Text>No Clubs Here</Text>
+    console.log(userId)
     return <View>
 
 
-        {lists.map(club => {
+        {clubs.map(club => {
             if (club.interestMeetingRequired === true) {
                 InterestMeeting = 'Interest Meeting Required'
             } else {
                 InterestMeeting = null
             }
 
+            var clubId = club._id
+            console.log(clubId)
+            
+            
+            
+            const onJoinClub = () => {
+                console.log('Club Joined!')
+                console.log(userId)
+                console.log(clubId)
+                
+                postData('http://localhost:3000/memberships', { userId, clubId })
+                    .then((data) => {
+                        console.log(data); // JSON data parsed by `data.json()` call
+                    }).catch(error => console.log(error));
+            }
+            
             return (
                 <ScrollView key={club._id} contentContainerStyle = {styles.card}>
                     <Text style = {styles.clubName}>{club.name}</Text>
                     <Text style = {styles.clubDescription}>{club.description}</Text>
                     <Text style = {styles.interestMeetingStyle}>{InterestMeeting}</Text>
                     <Text style = {styles.clubDescription}>Fee: ${club.fee.$numberDecimal}</Text>
-
                     <Text style = {styles.advisorName}>Advisor: {club.advisorId.firstName} {club.advisorId.lastName}</Text>
                     <TouchableOpacity
-                        style = {InterestMeeting === 'Interest Meeting Required' ? styles.disabledJoinClubButton : styles.joinClubButton}
-                        onPress = {onJoinClub}
-                        disabled = {InterestMeeting === 'Interest Meeting Required'}>
+                        style = {styles.joinClubButton}
+                        onPress = {onJoinClub}>
                         <Text>Join Club</Text>
                     </TouchableOpacity>
                 </ScrollView>
@@ -60,6 +86,18 @@ function loadData() {
     const [clubs, setClubs] = useState([]);
     const clubService = new ClubService();
     const userService = new UserService();
+    const [userId, setUserId] = useState([]);
+
+    const fetchUserId = async () => {
+        const token = await AsyncStorage.getItem('token')
+
+        var decoded = jwtDecode(token)
+
+        var userId = decoded.id
+        console.log(userId)
+
+        return userId
+    }
 
     const fetchData = async () => {
         const clubs = await clubService.list();
@@ -71,7 +109,7 @@ function loadData() {
             return club;
         })
 
-        return hydratedClubs;
+        return hydratedClubs
     }
 
     useEffect(() => {
@@ -87,9 +125,20 @@ function loadData() {
                 console.log(err)
                 return setIsLoading(false)
             })
+        
+        fetchUserId()
+            .then((userId) => {
+                console.log(userId);
+                setUserId(userId)
+                setIsLoading(false)
+            })
+            .catch((err) => {
+                console.log(err)
+                return setIsLoading(false)
+            })
     }, [])
 
-    return {isLoading, clubs}
+    return {isLoading, clubs, userId}
 }
 
 const styles = StyleSheet.create({
@@ -122,18 +171,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: "center",
         backgroundColor: '#CD8B49',
-        color: "#FFFFFF",
-        height: 30,
-        borderRadius: 2,
-        fontFamily: 'Futura',
-        fontSize: 16,
-        borderBottomRightRadius: 5,
-        borderBottomLeftRadius: 5,
-    },
-    disabledJoinClubButton: {
-        justifyContent: 'center',
-        alignItems: "center",
-        backgroundColor: '#D3D3D3',
         color: "#FFFFFF",
         height: 30,
         borderRadius: 2,

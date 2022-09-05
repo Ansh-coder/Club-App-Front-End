@@ -3,11 +3,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export class ClubService {
     token = '';
 
-    async constructor() {
-        this.token = await AsyncStorage.getItem('token');
-    }
-
     async list() {
+        this.token = await AsyncStorage.getItem('token');
         const clubsJson = await fetch('http://localhost:3000/clubs', {
             headers: {
                 Authorization: 'jwt ' + this.token
@@ -18,6 +15,7 @@ export class ClubService {
     }
 
     async getById(clubId) {
+        this.token = await AsyncStorage.getItem('token');
         const clubsJson = await fetch(`http://localhost:3000/clubs/${clubId}`, {
             headers: {
                 Authorization: 'jwt ' + this.token
