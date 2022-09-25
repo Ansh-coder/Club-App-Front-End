@@ -26,4 +26,22 @@ export class UserService {
         const jsonResponses = responses.map(response => response.json());
         return await Promise.all(jsonResponses);
     }
+
+    /*async response = await fetch('http://localhost:3000/users/' + userId, {headers: {
+        'Authorization': 'jwt ' + token
+    }})
+    
+    const userData = await response.json()
+    const userType = userData.map(typeofUser => typeofUser.data)
+
+    console.log(userType)*/
+
+    async getUserData (userId) {
+        this.token = await AsyncStorage.getItem('token');
+        const response = await fetch('http://localhost:3000/users/' + userId, {headers: {
+        'Authorization': 'jwt ' + this.token
+        }})
+
+        return response.json()
+    }
 }
