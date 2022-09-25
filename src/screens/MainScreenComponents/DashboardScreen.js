@@ -1,14 +1,15 @@
 import {StyleSheet, Text, View, useWindowDimensions, SafeAreaView, TouchableOpacity, ScrollView} from 'react-native'
 import React, {useEffect, useState} from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { LinearGradient } from 'expo-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 import {ClubService} from "../../services/club.service";
 import {UserService} from "../../services/user.service";
 import jwtDecode from 'jwt-decode';
-import { render } from 'react-dom';
+import {render} from 'react-dom';
 
 
 export const DashboardScreen = () => {
+    const [isAdvisor, setIsAdvisor] = useState(true);
 
     const {isLoading, clubs, userId, user, userType} = loadData();
     var token
@@ -20,107 +21,72 @@ export const DashboardScreen = () => {
     fetchToken()
 
     console.log(userType)
-    async function postData(url = '', data = {}) {
-        // Default options are marked with *
-        const response = await fetch(url, {
-          method: 'POST', // *GET, POST, PUT, DELETE, etc.
-          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'jwt ' + token
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          redirect: 'follow', // manual, *follow, error
-          referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-          body: JSON.stringify(data) // body data type must match "Content-Type" header
-        });
-        return response.json(); // parses JSON response into native JavaScript
-    }
 
-const AdvisorDashboard = async () => {
-    console.log('you are an advisor!')
-
-    return(
-        <View>
-            <Text style = {styles.advisorFunctionTest}>It works!</Text>
-        </View>
-    )
-}
-    
-const StudentDashboard = async () => {
-    console.log('You are a student!')
     if (isLoading) return <Text>Loading...</Text>
-
-
-
 
     if (clubs === undefined) return <Text>Something went wrong</Text>
     if (clubs.length === 0) return <Text>No Clubs Here</Text>
     console.log(userId)
     console.log(user)
-    return <View>
-
-
-        {clubs.map(club => {
-            console.log('Mapping through club variables')
-            if (club.interestMeetingRequired === true) {
-                InterestMeeting = 'Interest Meeting Required'
-            } else {
-                InterestMeeting = null
-            }
-            var clubId = club._id
-            var interestMeetingAttended
-            
-            if (InterestMeeting === null) {
-                interestMeetingAttended = true
-            } else {
-                interestMeetingAttended = false
-            }
-
-            if (club.fee.$numberDecimal === 0) {
-                var paid = true
-            } else paid = false
-
-            console.log(clubId)
-            
-            
-            const onJoinClub = () => {
-                console.log('Club Joined!')
-                console.log(userId)
-                console.log(clubId)
-                
-                postData('http://localhost:3000/memberships', { userId, clubId, interestMeetingAttended, paid })
-                    .then((data) => {
-                        console.log(data); // JSON data parsed by `data.json()` call
-                    }).catch(error => console.log(error));
-            }
-            return (
-                <ScrollView key={club._id} contentContainerStyle = {styles.card}>
-                    <Text style = {styles.clubName}>{club.name}</Text>
-                    <Text style = {styles.clubDescription}>{club.description}</Text>
-                    <Text style = {styles.interestMeetingStyle}>{InterestMeeting}</Text>
-                    <Text style = {styles.clubDescription}>Fee: ${club.fee.$numberDecimal}</Text>
-                    <Text style = {styles.advisorName}>Advisor: {club.advisorId.firstName} {club.advisorId.lastName}</Text>
-                    <TouchableOpacity
-                        style = {styles.joinClubButton}
-                        onPress = {onJoinClub}>
-                        <Text>Join Club</Text>
-                    </TouchableOpacity>
-                </ScrollView>
-            );
-        })}
-    </View>
-}
-
     if (userType === 'student') {
-        console.log('student')
-        StudentDashboard()
-    } else if (userType === 'advisor') {
-        console.log('advisor')
-        AdvisorDashboard()
+        return <View>
+            {clubs.map(club => {
+                console.log('Mapping through club variables')
+                if (club.interestMeetingRequired === true) {
+                    InterestMeeting = 'Interest Meeting Required'
+                } else {
+                    InterestMeeting = null
+                }
+                var clubId = club._id
+                var interestMeetingAttended
+
+                if (InterestMeeting === null) {
+                    interestMeetingAttended = true
+                } else {
+                    interestMeetingAttended = false
+                }
+
+                if (club.fee.$numberDecimal === 0) {
+                    var paid = true
+                } else paid = false
+
+                console.log(clubId)
+
+
+                const onJoinClub = () => {
+                    console.log('Club Joined!')
+                    console.log(userId)
+                    console.log(clubId)
+
+                    postData('http://localhost:3000/memberships', {userId, clubId, interestMeetingAttended, paid})
+                        .then((data) => {
+                            console.log(data); // JSON data parsed by `data.json()` call
+                        }).catch(error => console.log(error));
+                }
+                return (
+                    <ScrollView key={club._id} contentContainerStyle={styles.card}>
+                        <Text style={styles.clubName}>{club.name}</Text>
+                        <Text style={styles.clubDescription}>{club.description}</Text>
+                        <Text style={styles.interestMeetingStyle}>{InterestMeeting}</Text>
+                        <Text style={styles.clubDescription}>Fee: ${club.fee.$numberDecimal}</Text>
+                        <Text
+                            style={styles.advisorName}>Advisor: {club.advisorId.firstName} {club.advisorId.lastName}</Text>
+                        <TouchableOpacity
+                            style={styles.joinClubButton}
+                            onPress={onJoinClub}>
+                            <Text>Join Club</Text>
+                        </TouchableOpacity>
+                    </ScrollView>
+                );
+            })}
+        </View>
+    } else {
+        return (
+            <View>
+                <Text style={styles.advisorFunctionTest}>It works!</Text>
+            </View>
+        )
     }
-
-
 
 }
 
@@ -138,10 +104,10 @@ function loadData() {
         const token = await AsyncStorage.getItem('token')
         var decoded = jwtDecode(token)
         console.log(decoded)
-        
+
         var userId = decoded.id
         console.log(userId)
-        
+
 
         return userId
     }
@@ -164,22 +130,22 @@ function loadData() {
         const token = await AsyncStorage.getItem('token')
         var decoded = jwtDecode(token)
 
-        
+
         var userId = decoded.id
         console.log(userId)
 
-       /* const response = await fetch('http://localhost:3000/users/' + userId, {headers: {
-            'Authorization': 'jwt ' + token
-        }})
-        
-        const userData = await response.json()
-        const userType = userData.map(typeofUser => typeofUser.data)
+        /* const response = await fetch('http://localhost:3000/users/' + userId, {headers: {
+             'Authorization': 'jwt ' + token
+         }})
 
-        console.log(userType) */
+         const userData = await response.json()
+         const userType = userData.map(typeofUser => typeofUser.data)
+
+         console.log(userType) */
 
         const userData = await userService.getUserData(userId)
-        
-        
+
+
         console.log(userData)
         console.log(userData.type)
         const userType = userData.type
@@ -200,7 +166,7 @@ function loadData() {
                 console.log(err)
                 return setIsLoading(false)
             })
-        
+
         fetchUserId()
             .then((userId) => {
                 console.log(userId);
@@ -276,5 +242,96 @@ const styles = StyleSheet.create({
         fontWeight: '600'
     }
 });
+
+async function AdvisorDashboard() {
+    console.log('you are an advisor!')
+
+    return (
+        <View>
+            <Text style={styles.advisorFunctionTest}>It works!</Text>
+        </View>
+    )
+}
+
+async function StudentDashboard(isLoading) {
+    console.log('You are a student!')
+    let InterestMeeting = '';
+    if (isLoading) return <Text>Loading...</Text>
+
+    if (clubs === undefined) return <Text>Something went wrong</Text>
+    if (clubs.length === 0) return <Text>No Clubs Here</Text>
+    console.log(userId)
+    console.log(user)
+    return <View>
+
+
+        {clubs.map(club => {
+            console.log('Mapping through club variables')
+            if (club.interestMeetingRequired === true) {
+                InterestMeeting = 'Interest Meeting Required'
+            } else {
+                InterestMeeting = null
+            }
+            var clubId = club._id
+            var interestMeetingAttended
+
+            if (InterestMeeting === null) {
+                interestMeetingAttended = true
+            } else {
+                interestMeetingAttended = false
+            }
+
+            if (club.fee.$numberDecimal === 0) {
+                var paid = true
+            } else paid = false
+
+            console.log(clubId)
+
+
+            const onJoinClub = () => {
+                console.log('Club Joined!')
+                console.log(userId)
+                console.log(clubId)
+
+                postData('http://localhost:3000/memberships', {userId, clubId, interestMeetingAttended, paid})
+                    .then((data) => {
+                        console.log(data); // JSON data parsed by `data.json()` call
+                    }).catch(error => console.log(error));
+            }
+            return (
+                <ScrollView key={club._id} contentContainerStyle={styles.card}>
+                    <Text style={styles.clubName}>{club.name}</Text>
+                    <Text style={styles.clubDescription}>{club.description}</Text>
+                    <Text style={styles.interestMeetingStyle}>{InterestMeeting}</Text>
+                    <Text style={styles.clubDescription}>Fee: ${club.fee.$numberDecimal}</Text>
+                    <Text
+                        style={styles.advisorName}>Advisor: {club.advisorId.firstName} {club.advisorId.lastName}</Text>
+                    <TouchableOpacity
+                        style={styles.joinClubButton}
+                        onPress={onJoinClub}>
+                        <Text>Join Club</Text>
+                    </TouchableOpacity>
+                </ScrollView>
+            );
+        })}
+    </View>
+}
+
+async function postData(url = '', data = {}) {
+    // Default options are marked with *
+    const response = await fetch(url, {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'jwt ' + token
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        body: JSON.stringify(data) // body data type must match "Content-Type" header
+    });
+    return response.json(); // parses JSON response into native JavaScript
+}
 
 export default DashboardScreen
