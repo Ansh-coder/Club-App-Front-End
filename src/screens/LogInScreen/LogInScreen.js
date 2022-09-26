@@ -9,12 +9,11 @@ import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
 
 function LogInScreen ( {navigation}) {
 
-var [email, onChangeEmail] = React.useState('test1234@user.com');
-var [password, onChangePassword] = React.useState('test123');
+var [email, onChangeEmail] = React.useState('advisor9@user.com');
+var [password, onChangePassword] = React.useState('advisoristhebest9');
 
 const {width} = useWindowDimensions();
 const {height} = useWindowDimensions();
-
 
 const onSubmit = async () => {
   console.log('submit')

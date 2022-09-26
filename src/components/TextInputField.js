@@ -3,11 +3,11 @@ import React, { useState } from "react";
 import NextFunctionForApp from '../screens/MainScreen';
 
 const TextInputField = () => {
- var [firstName, onChangefirstName] = React.useState(null);
- var [lastName, onChangelastName] = React.useState(null);
- var [email, onChangeEmail] = React.useState(null);
- var [password, onChangePassword] = React.useState(null);
- var [reenterpassword, onChangeReEnterPassword] = React.useState(null);
+ var [firstName, onChangefirstName] = React.useState([]);
+ var [lastName, onChangelastName] = React.useState([]);
+ var [email, onChangeEmail] = React.useState([]);
+ var [password, onChangePassword] = React.useState([]);
+ var [reenterpassword, onChangeReEnterPassword] = React.useState([]);
 
  const [disable, setDisable] = React.useState(false);
 
