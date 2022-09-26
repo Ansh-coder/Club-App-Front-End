@@ -6,12 +6,11 @@ import {ClubService} from "../../services/club.service";
 import {UserService} from "../../services/user.service";
 import jwtDecode from 'jwt-decode';
 import {render} from 'react-dom';
+import {MembershipService} from "../../services/membership.service"
 
 
 export const DashboardScreen = () => {
-    const [isAdvisor, setIsAdvisor] = useState(true);
-
-    const {isLoading, clubs, userId, user, userType} = loadData();
+    const {isLoading, clubs, userId, user, userType, clubsUserRegisterdFor} = loadData();
     var token
     var InterestMeeting
     const fetchToken = async () => {
@@ -54,15 +53,20 @@ export const DashboardScreen = () => {
 
 
                 const onJoinClub = () => {
-                    console.log('Club Joined!')
                     console.log(userId)
                     console.log(clubId)
 
-                    postData('http://localhost:3000/memberships', {userId, clubId, interestMeetingAttended, paid})
+                    if(clubsUserRegisterdFor.includes(clubId)) {
+                        console.log("Club Already Registered For")
+                    } else {
+                        postData('http://localhost:3000/memberships', {userId, clubId, interestMeetingAttended, paid}, token)
                         .then((data) => {
                             console.log(data); // JSON data parsed by `data.json()` call
                         }).catch(error => console.log(error));
-                }
+
+                        clubsUserRegisterdFor.push(clubId)
+                    }
+                    }
                 return (
                     <ScrollView key={club._id} contentContainerStyle={styles.card}>
                         <Text style={styles.clubName}>{club.name}</Text>
@@ -81,6 +85,7 @@ export const DashboardScreen = () => {
             })}
         </View>
     } else {
+        
         return (
             <View>
                 <Text style={styles.advisorFunctionTest}>It works!</Text>
@@ -95,10 +100,11 @@ function loadData() {
     const [clubs, setClubs] = useState([]);
     const clubService = new ClubService();
     const userService = new UserService();
+    const membershipService = new MembershipService();
     const [userId, setUserId] = useState([]);
-    const [authToken, setAuthToken] = useState([])
     const [user, setUser] = useState([]);
     const [userType, setUserType] = useState([]);
+    const [clubsUserRegisterdFor, setClubsUserRegisterdFor] = useState([])
 
     const fetchUserId = async () => {
         const token = await AsyncStorage.getItem('token')
@@ -112,11 +118,28 @@ function loadData() {
         return userId
     }
 
+    const fetchMemberships = async () => {
+        const token = await AsyncStorage.getItem('token')
+        var decoded = jwtDecode(token)
+
+        var userId = decoded.id
+        console.log(userId)
+
+        const userMemberships = await membershipService.getUserMemberships(userId)
+        console.log(userMemberships)
+        //if (userMemberships === null) {console.log('Club Membership Does Not Exist')} else {console.log('Club Membership Exists')}
+        const clubsUserRegisterdFor = userMemberships.map(membership => membership.clubId)
+        console.log(clubsUserRegisterdFor)
+
+        return clubsUserRegisterdFor
+    }
 
     const fetchData = async () => {
         const clubs = await clubService.list();
         const advisorIds = clubs.map(club => club.advisorId);
+        console.log(advisorIds)
         const advisors = await userService.getUsersFromIds(advisorIds);
+        
 
         const hydratedClubs = clubs.map(club => {
             club.advisorId = advisors.find(user => user._id === club.advisorId);
@@ -129,6 +152,8 @@ function loadData() {
     const fetchUserData = async () => {
         const token = await AsyncStorage.getItem('token')
         var decoded = jwtDecode(token)
+        var advisorClubs;
+        
 
 
         var userId = decoded.id
@@ -149,6 +174,13 @@ function loadData() {
         console.log(userData)
         console.log(userData.type)
         const userType = userData.type
+
+        if (userType === 'advisor') {
+            var advisorId = userId
+            advisorClubs = await clubService.getClubsForAdvisor(advisorId)
+            console.log(advisorClubs)
+        }
+        
 
         return userType
     }
@@ -188,9 +220,19 @@ function loadData() {
                 console.log(err)
                 return setIsLoading(false)
             })
+        fetchMemberships()
+            .then((clubsUserRegisterdFor) => {
+                console.log(clubsUserRegisterdFor);
+                setClubsUserRegisterdFor(clubsUserRegisterdFor)
+                setIsLoading(false)
+            })
+            .catch((err) => {
+                console.log(err)
+                return setIsLoading(false)
+            })
     }, [])
 
-    return {isLoading, clubs, userId, user, userType}
+    return {isLoading, clubs, userId, user, userType, clubsUserRegisterdFor}
 }
 
 const styles = StyleSheet.create({
@@ -293,7 +335,7 @@ async function StudentDashboard(isLoading) {
                 console.log(userId)
                 console.log(clubId)
 
-                postData('http://localhost:3000/memberships', {userId, clubId, interestMeetingAttended, paid})
+                postData('http://localhost:3000/memberships', {userId, clubId, interestMeetingAttended, paid}, token)
                     .then((data) => {
                         console.log(data); // JSON data parsed by `data.json()` call
                     }).catch(error => console.log(error));
@@ -317,7 +359,7 @@ async function StudentDashboard(isLoading) {
     </View>
 }
 
-async function postData(url = '', data = {}) {
+async function postData(url = '', data = {}, token) {
     // Default options are marked with *
     const response = await fetch(url, {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
