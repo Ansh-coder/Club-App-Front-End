@@ -19,14 +19,7 @@ const onSubmit = async () => {
   console.log('submit')
   console.log(email)
   console.log(password)
-
-
-      const login = await fetch('http://localhost:3000/users/login?' + new URLSearchParams({
-          email: email,
-          password: password,
-
-          
-      }))
+    const login = await fetch(`http://localhost:3000/users/login?email=${email}&password=${password}`)
 
       const user = await login.json()
       console.log(user)
