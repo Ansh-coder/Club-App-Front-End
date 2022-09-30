@@ -9,13 +9,27 @@ export const ProfileScreen = () => {
 
   const {isLoading, user} = loadData();
   var [email, onChangeEmail] = React.useState(user.email);
+  var [password, onChangePassword] = React.useState(user.email);
   if (isLoading) return <Text>Loading...</Text>
 //  var [email, onChangeEmail] = React.useState(user.email);
+console.log(user.email)
+console.log(email)
   return <View>
-    <Text>{user.email}</Text>
+    <TextInput
+    style={styles.input}
+    onChangeText={onChangeEmail}
+    value={email}
+    placeholderTextColor = '#D5B877'
+    />
+    <TextInput
+    style={styles.input}
+    secureTextEntry = {true}
+    onChangeText={onChangePassword}
+    value={password}
+    placeholderTextColor = '#D5B877'
+    />
   </View>
 }
-
 function loadData() {
   const [isLoading, setIsLoading] = useState(true)
   const [user, setUser] = useState([])
