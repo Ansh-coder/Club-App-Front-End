@@ -10,7 +10,7 @@ import {MembershipService} from "../../services/membership.service"
 
 
 export const DashboardScreen = () => {
-    const {isLoading, clubs, userId, user, userType, clubsUserRegisterdFor} = loadData();
+    const {isLoading, clubs, userId, user, userType, clubsUserRegisterdFor, advisorClubs} = loadData();
     var token
     var InterestMeeting
     const fetchToken = async () => {
@@ -85,12 +85,30 @@ export const DashboardScreen = () => {
             })}
         </View>
     } else {
-        
-        return (
-            <View>
-                <Text style={styles.advisorFunctionTest}>It works!</Text>
-            </View>
-        )
+        console.log(advisorClubs)
+        return <View>
+            {advisorClubs.map(club => {
+                console.log('Mapping through club variable for advisor')
+
+
+                const onViewClubInfo = () => {
+                    console.log('Viewing club info')
+                    }
+                return (
+                    <ScrollView key={club._id} contentContainerStyle={styles.card}>
+                        <Text style={styles.clubName}>{club.name}</Text>
+                        <Text style={styles.clubDescription}>{club.description}</Text>
+                        <Text style={styles.interestMeetingStyle}>{InterestMeeting}</Text>
+                        <Text style={styles.clubDescription}>Fee: ${club.fee.$numberDecimal}</Text>
+                        <TouchableOpacity
+                            style={styles.viewClubInfoForAdvisor}
+                            onPress={onViewClubInfo}>
+                            <Text>Join Club</Text>
+                        </TouchableOpacity>
+                    </ScrollView>
+                );
+            })}
+        </View>
     }
 
 }
@@ -105,6 +123,7 @@ function loadData() {
     const [user, setUser] = useState([]);
     const [userType, setUserType] = useState([]);
     const [clubsUserRegisterdFor, setClubsUserRegisterdFor] = useState([])
+    const [advisorClubs, setAdvisorClubs] = useState([])
 
     const fetchUserId = async () => {
         const token = await AsyncStorage.getItem('token')
@@ -175,14 +194,30 @@ function loadData() {
         console.log(userData.type)
         const userType = userData.type
 
+        return userType
+    }
+
+    const fetchAdvisorClubs = async () => {
+        const token = await AsyncStorage.getItem('token')
+        var decoded = jwtDecode(token)
+        var advisorClubs;
+
+        var userId = decoded.id
+        console.log(userId)
+
+        const userData = await userService.getUserData(userId)
+        console.log(userData)
+        console.log(userData.type)
+        const userType = userData.type
+
         if (userType === 'advisor') {
             var advisorId = userId
+            console.log(advisorId)
             advisorClubs = await clubService.getClubsForAdvisor(advisorId)
             console.log(advisorClubs)
         }
-        
 
-        return userType
+        return advisorClubs
     }
 
     useEffect(() => {
@@ -230,9 +265,19 @@ function loadData() {
                 console.log(err)
                 return setIsLoading(false)
             })
+        fetchAdvisorClubs()
+            .then((advisorClubs) => {
+                console.log(advisorClubs);
+                setAdvisorClubs(advisorClubs)
+                setIsLoading(false)
+            })
+            .catch((err) => {
+                console.log(err)
+                return setIsLoading(false)
+            })
     }, [])
 
-    return {isLoading, clubs, userId, user, userType, clubsUserRegisterdFor}
+    return {isLoading, clubs, userId, user, userType, clubsUserRegisterdFor, advisorClubs}
 }
 
 const styles = StyleSheet.create({
@@ -262,6 +307,18 @@ const styles = StyleSheet.create({
         fontWeight: '600'
     },
     joinClubButton: {
+        justifyContent: 'center',
+        alignItems: "center",
+        backgroundColor: '#CD8B49',
+        color: "#FFFFFF",
+        height: 30,
+        borderRadius: 2,
+        fontFamily: 'Futura',
+        fontSize: 16,
+        borderBottomRightRadius: 5,
+        borderBottomLeftRadius: 5,
+    },
+    viewClubInfoForAdvisor: {
         justifyContent: 'center',
         alignItems: "center",
         backgroundColor: '#CD8B49',
