@@ -11,6 +11,7 @@ import {MembershipService} from "../../services/membership.service"
 
 export const DashboardScreen = () => {
     const {isLoading, clubs, userId, user, userType, clubsUserRegisterdFor, advisorClubs} = loadData();
+    const membershipService = new MembershipService();
     var token
     var InterestMeeting
     const fetchToken = async () => {
@@ -94,6 +95,17 @@ export const DashboardScreen = () => {
                 const onViewClubInfo = () => {
                     console.log('Viewing club info')
                     }
+                
+                const fetchclubMembershipRequests = async () => {
+                    const clubMembershipRequests = await membershipService.getClubMembershipRequests(club._id)
+                    console.log(clubMembershipRequests)
+                    console.log(club._id)
+
+                    return clubMembershipRequests
+                }
+                fetchclubMembershipRequests()
+                
+                
                 return (
                     <ScrollView key={club._id} contentContainerStyle={styles.card}>
                         <Text style={styles.clubName}>{club.name}</Text>
@@ -103,7 +115,7 @@ export const DashboardScreen = () => {
                         <TouchableOpacity
                             style={styles.viewClubInfoForAdvisor}
                             onPress={onViewClubInfo}>
-                            <Text>Join Club</Text>
+                            <Text>View Club</Text>
                         </TouchableOpacity>
                     </ScrollView>
                 );

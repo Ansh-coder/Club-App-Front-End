@@ -19,5 +19,15 @@ export class MembershipService {
         }})
 
         return response.json()
+        }
+
+        async getClubMembershipRequests (clubId) {
+            this.token = await AsyncStorage.getItem('token');
+            const response = await fetch('http://localhost:3000/memberships?' + new URLSearchParams({clubId: clubId}), {headers: {
+            'Authorization': 'jwt ' + this.token
+            }})
+    
+            return response.json()
+            }
     }
-}
+    
