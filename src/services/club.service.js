@@ -24,7 +24,7 @@ export class ClubService {
 
         return clubsJson.json()
     }
-
+/*
     async getClubsForAdvisor(advisorId) {
         this.token = await AsyncStorage.getItem('token');
         const advisorClubs = await fetch('http://localhost:3000/clubs?' + new URLSearchParams({advisorId: advisorId}), {
@@ -35,4 +35,17 @@ export class ClubService {
 
         return advisorClubs.json()
     }
+}
+*/
+
+async getClubsForAdvisor(advisorId) {
+    this.token = await AsyncStorage.getItem('token');
+    const advisorClubs = await fetch('http://localhost:3000/clubs?' + new URLSearchParams({advisorId: advisorId}), {
+        headers: {
+            'Authorization': 'jwt ' + this.token
+        }
+    })
+
+    return advisorClubs.json()
+}
 }
