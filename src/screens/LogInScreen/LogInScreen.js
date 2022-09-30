@@ -28,7 +28,7 @@ const onSubmit = async () => {
           
       }))
 
-      const user = await login.json()
+      const user = await login
       console.log(user)
       await AsyncStorage.setItem('token', user.token);
       navigation.navigate('Main Screen')
