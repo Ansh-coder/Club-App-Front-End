@@ -1,6 +1,6 @@
-import { View, SafeAreaView, Text, StyleSheet, TextInput, useWindowDimensions, Button, TouchableOpacity, ImageBackground} from 'react-native'
-import React, { useState } from "react";
-import NextFunctionForApp from '../screens/MainScreen';
+import { SafeAreaView, Text, StyleSheet, TextInput, useWindowDimensions, TouchableOpacity } from 'react-native'
+import React from "react";
+import { appBackgroundColor, appButtonColor, appTextColor, appFont } from '../UniversalAppDesignVars';
 
 const TextInputField = () => {
  var [firstName, onChangefirstName] = React.useState([]);
@@ -43,28 +43,27 @@ const TextInputField = () => {
    }).catch(error => console.log(error));
  }
   return (
-   <>
    <SafeAreaView style = {styles.root}>
      <TextInput
        style={styles.input}
        onChangeText={onChangefirstName}
        value={firstName}
        placeholder="Your First Name"
-       placeholderTextColor = '#D5B877'
+       placeholderTextColor = {appTextColor}
      />
      <TextInput
        style={styles.input}
        onChangeText={onChangelastName}
        value={lastName}
        placeholder="Your Last Name"
-       placeholderTextColor = '#D5B877'
+       placeholderTextColor = {appTextColor}
      />
      <TextInput
        style={styles.input}
        onChangeText={onChangeEmail}
        value={email}
        placeholder="Your Email"
-       placeholderTextColor = '#D5B877'
+       placeholderTextColor = {appTextColor}
      />
      <TextInput
        style={styles.input}
@@ -72,7 +71,7 @@ const TextInputField = () => {
        onChangeText={onChangePassword}
        value={password}
        placeholder="Your Password"
-       placeholderTextColor = '#D5B877'
+       placeholderTextColor = {appTextColor}
      />
      <TextInput
        style={styles.input}
@@ -80,16 +79,15 @@ const TextInputField = () => {
        onChangeText={onChangeReEnterPassword}
        value={reenterpassword}
        placeholder="Re-enter Password"
-       placeholderTextColor = '#D5B877'
+       placeholderTextColor = {appTextColor}
      />
      <TouchableOpacity 
        style = {styles.signUpButton}
        onPress = {onSubmit}
        disabled = {!firstName || !lastName || !email || !password || !reenterpassword || password !== reenterpassword }>
-         <Text>SIGN UP</Text>
+         <Text style = {styles.buttonText}>SIGN UP</Text>
      </TouchableOpacity>
    </SafeAreaView>
-   </> 
   )
 }
 
@@ -97,38 +95,45 @@ const styles = StyleSheet.create({
    root: {
      alignItems: 'center',
      justifyContent: 'center',
-     backgroundColor: '#fffde4'
+     backgroundColor: appBackgroundColor,
+     height: '100%'
+   },
+   buttonText: {
+    fontFamily: appFont
    },
    input: {
      width: 300,
      height: 40,
-     backgroundColor: '#fffde4',
+     backgroundColor: appBackgroundColor,
      paddingVertical: 10,
      paddingHorizontal: 15,
-     borderColor: '#644614',
+     borderColor: appButtonColor,
      borderBottomWidth: 3,
      fontSize: 16,
      margin: 10,
-     color: '#000000',
-     fontFamily: 'Futura'
+     color: appTextColor,
+     fontFamily: appFont
    },
    signUpButton: {
      justifyContent: "center",
      alignItems: "center",
-     backgroundColor: '#CD8B49',
-     color: "#FFFFFF",
+     backgroundColor: appButtonColor,
+     color: appTextColor,
      width: 75,
      height: 30,
      borderRadius: 2,
-     fontFamily: 'Futura',
+     fontFamily: appFont,
      fontSize: 16,
-     margin: 20
+     margin: 20,
+     shadowColor: '#5A5A5A',
+     shadowOffset: {width: 0, height: 0},
+     shadowRadius: 10
    },
    styleOfText: {
     marginTop: '12.5%',
-    fontFamily: 'Futura',
+    fontFamily: appFont,
     fontSize: 16,
-    color: '#CD8B49'
+    color: appButtonColor
   }
 })
 

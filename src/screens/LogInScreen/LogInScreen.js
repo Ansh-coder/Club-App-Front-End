@@ -2,13 +2,10 @@ import { StyleSheet, Text, TextInput, Button,  View, SafeAreaView, Image, useWin
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Logo from '../../../assets/favicon.png';
 import React from 'react'
-import MainScreen from '../MainScreen';
-import SignInScreen from '../SignInScreen';
-import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
+import {appBackgroundColor, appButtonColor, appTextColor, appFont} from '../../UniversalAppDesignVars'
 
 
 function LogInScreen ( {navigation}) {
-
 var [email, onChangeEmail] = React.useState('advisor9@user.com');
 var [password, onChangePassword] = React.useState('advisoristhebest9');
 
@@ -45,7 +42,7 @@ async function setToken(user) {
 
 
   return (
-    <>
+    <View style = {styles.logInScreenStyle}>
     <View style = {styles.root}>
         <Image source = {Logo} style = {[styles.logo, {height: height*0.2}]} resizeMode = "contain"/>
     </View>
@@ -70,7 +67,7 @@ async function setToken(user) {
         style = {styles.logInButton}
         disabled = {!email || !password}
         onPress = {onSubmit}>
-          <Text>LOG IN</Text>
+          <Text style = {styles.buttonText}>LOG IN</Text>
       </TouchableOpacity>
     
     </SafeAreaView>
@@ -82,20 +79,24 @@ async function setToken(user) {
       <TouchableOpacity 
         style = {styles.signUpButton}
         onPress = {()=> navigation.navigate('Sign Up')}>
-          <Text>SIGN UP</Text>
+          <Text style = {styles.buttonText}>SIGN UP</Text>
       </TouchableOpacity>
     </View>
-    </>
+    </View>
   )
 }
 
 export default LogInScreen
 
 const styles = StyleSheet.create ({
-    root: {
+  logInScreenStyle: {
+    backgroundColor: appBackgroundColor,
+    height: '100vh'
+  } , 
+  root: {
       alignItems: 'center',
       padding: 20,
-      backgroundColor: '#fffde4'
+      backgroundColor: appBackgroundColor,
     },
     logo: {
         width: '70%', 
@@ -106,43 +107,52 @@ const styles = StyleSheet.create ({
     input: {
       width: 300,
       height: 40,
-      backgroundColor: '#fffde4',
+      backgroundColor: appBackgroundColor,
       paddingVertical: 10,
       paddingHorizontal: 15,
-      borderColor: '#644614',
+      borderColor: appButtonColor,
       borderBottomWidth: 3,
       fontSize: 16,
       margin: 15,
-      color: '#000000',
-      fontFamily: 'Futura'
+      color: appTextColor,
+      fontFamily: appFont,
     },
     signUpButton: {
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: '#CD8B49',
-      color: "#FFFFFF",
+      backgroundColor: appButtonColor,
+      color: appTextColor,
       width: 75,
       height: 30,
       borderRadius: 2,
-      fontFamily: 'Futura',
-      fontSize: 16
+      fontFamily: appFont,
+      fontSize: 16,
+      shadowColor: '#5A5A5A',
+      shadowOffset: {width: 0, height: 0},
+      shadowRadius: 10
     },
     styleOfText: {
       marginTop: '12.5%',
-      fontFamily: 'Futura',
+      fontFamily: appFont,
       fontSize: 16,
-      color: '#CD8B49'
+      color: appButtonColor
     },
     logInButton: {
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: '#CD8B49',
-      color: "#FFFFFF",
+      backgroundColor: appButtonColor,
+      color: appTextColor,
       width: 75,
       height: 30,
       borderRadius: 2,
-      fontFamily: 'Futura',
+      fontFamily: appFont,
       fontSize: 16,
-      margin: 20
+      margin: 20,
+      shadowColor: '#5A5A5A',
+      shadowOffset: {width: 0, height: 0},
+      shadowRadius: 10
     },
+    buttonText: {
+      fontFamily: appFont
+    }
 })

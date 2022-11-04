@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { TextInput } from 'react-native-gesture-handler'
+import { appBackgroundColor, appButtonColor, appTextColor, appFont } from '../../UniversalAppDesignVars'
 
 export const ProfileScreen = () => {
 
@@ -52,22 +52,22 @@ const styles = StyleSheet.create({
   card: {
       alignSelf: 'center',
       justifyContent: 'center',
-      backgroundColor: '#FFFDE4',
-      borderColor: '#000000',
+      backgroundColor: appBackgroundColor,
+      borderColor: appTextColor,
       borderWidth: 3,
       borderRadius: 10,
       margin: 20
   },input: {
     width: 300,
     height: 40,
-    backgroundColor: '#FFFDE4',
+    backgroundColor: appBackgroundColor,
     paddingVertical: 10,
     paddingHorizontal: 15,
-    borderColor: '#644614',
+    borderColor: appButtonColor,
     borderBottomWidth: 3,
     fontSize: 16,
     margin: 15,
-    color: '#000000',
-    fontFamily: 'Futura'}
+    color: appTextColor,
+    fontFamily: appFont}
   });
 export default ProfileScreen

@@ -28,6 +28,6 @@ export class MembershipService {
             }})
     
             return response.json()
-            }
+        }
     }
     

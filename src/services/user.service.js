@@ -16,7 +16,7 @@ export class UserService {
     async getUsersFromIds(ids) {
         this.token = await AsyncStorage.getItem('token');
         const apiRequests = ids.map(id => {
-            return fetch('http://localhost:3000/users/' + id, {
+            return fetch('http://localhost:3000/users?' + new URLSearchParams({id: id}), {
                 headers: {
                     Authorization: 'jwt ' + this.token
                 }
