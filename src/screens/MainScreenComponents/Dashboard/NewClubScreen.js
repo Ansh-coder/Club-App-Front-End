@@ -144,7 +144,7 @@ export const NewClubScreen = ({navigation}) => {
           onPress = {onSendRequest}
           disabled = {clubName == "" || clubFee == "" || clubDescription == "" || clubCategory == ""}
           style={clubName == "" || clubFee == "" || clubDescription == "" || clubCategory == "" ? styles.disabledSendRequestButton : styles.sendRequestButton}>
-            <Text style = {styles.buttonText}>Send Request to Admin</Text>
+            <Text style = {styles.buttonText}>Create Club</Text>
         </TouchableOpacity>
     </SafeAreaView>
     )

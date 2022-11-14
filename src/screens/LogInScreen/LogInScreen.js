@@ -6,8 +6,8 @@ import {appBackgroundColor, appButtonColor, appTextColor, appFont} from '../../U
 
 
 function LogInScreen ( {navigation}) {
-var [email, onChangeEmail] = React.useState('advisor9@user.com');
-var [password, onChangePassword] = React.useState('advisoristhebest9');
+var [email, onChangeEmail] = React.useState('advisor8@user.com');
+var [password, onChangePassword] = React.useState('advisoristhebest8');
 
 const {width} = useWindowDimensions();
 const {height} = useWindowDimensions();

@@ -11,7 +11,7 @@ import { appBackgroundColor, appButtonColor, appTextColor, appFont } from '../..
 
 
 export const DashboardScreen = ({navigation}) => {
-    const {isLoading, clubs, userId, user, userType, clubsUserRegisterdFor, advisorClubs, clubMembershipRequests} = loadData();
+    const {isLoading, clubs, userId, user, userType, advisorClubs, clubMembershipRequests, userMemberships} = loadData();
     const membershipService = new MembershipService();
     var token
     var InterestMeeting
@@ -60,10 +60,15 @@ export const DashboardScreen = ({navigation}) => {
         )
     console.log(userId)
     console.log(user)
+    console.log(clubs)
+    var whichClubMembership = 0;
+    var whichClubMembershipForNotApproved = 0;
     if (userType === 'student') {
         return <View style = {styles.dashboardScreenStyle}>
             {clubs.map(club => {
                 console.log('Mapping through club variables')
+                var isRegistrationRequestSent = false;
+                console.log(club)
                 if (club.interestMeetingRequired === true) {
                     InterestMeeting = 'Interest Meeting Required'
                 } else {
@@ -81,12 +86,34 @@ export const DashboardScreen = ({navigation}) => {
                 if (club.fee.$numberDecimal === 0) {
                     var paid = true
                 } else paid = false
+                
 
                 console.log(clubId)
 
+                const clubsUserRegisterdFor = userMemberships.map(membership => membership.clubId)
 
 
+                var whichClub = 0;
+                var clubIndex = null;
+                clubsUserRegisterdFor.map(userClubId => {
+                    if(club._id == userClubId) {
+                        isRegistrationRequestSent = true
+                        clubIndex = whichClub
+                        console.log(clubIndex)
+                    }
+                    whichClub++;
+                })
+
+                var isRegisteredOrNot = false;
+                if(isRegistrationRequestSent == false) {
+                    isRegisteredOrNot = false
+                } else if (userMemberships[clubIndex].registered == true) {
+                    isRegisteredOrNot = true
+                }
+                
                 const onJoinClub = () => {
+                    console.log("Viewing Club")
+                    /*
                     console.log(userId)
                     console.log(clubId)
 
@@ -99,25 +126,34 @@ export const DashboardScreen = ({navigation}) => {
                         }).catch(error => console.log(error));
 
                         clubsUserRegisterdFor.push(clubId)
+                    }*/
                     }
-                    }
+
+
+                if(isRegisteredOrNot) {
                 return (
                     <View key = {club._id} style = {styles.base}>
                     <ScrollView key={club._id} contentContainerStyle={styles.card}>
                         <Text style={styles.clubName}>{club.name}</Text>
                         <Text style={styles.clubDescription}>{club.description}</Text>
-                        <Text style={styles.interestMeetingStyle}>{InterestMeeting}</Text>
-                        <Text style={styles.clubDescription}>Fee: ${club.fee.$numberDecimal}</Text>
-                        {/*<Text style={styles.advisorName}>Advisor: {club.advisorId.firstName} {club.advisorId.lastName}</Text>*/}
+                        <Text style={styles.advisorName}>Advisor: {club.advisorId.firstName} {club.advisorId.lastName}</Text>
                         <TouchableOpacity
                             style={styles.viewClubInfoForAdvisor}
                             onPress={onJoinClub}>
-                            <Text style = {styles.buttonText}>Join Club</Text>
+                            <Text style = {styles.buttonText}>View Club</Text>
                         </TouchableOpacity>
                     </ScrollView>
                     </View>
                 );
+                }
             })}
+            <View style = {styles.base}>
+                <TouchableOpacity
+                    style={styles.createNewClubButton}
+                    onPress={() => navigation.navigate("Join Club Screen")}>
+                    <Text style = {styles.buttonText}>Join A New Club</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     } else {
         console.log(advisorClubs)
@@ -127,7 +163,7 @@ export const DashboardScreen = ({navigation}) => {
         clubMembershipRequests.map(club => {
             var activeMembershipRequests = 0;
             club.map(membershipRequest => {
-                if(membershipRequest.registered == false) {
+                if(membershipRequest.registered == false && membershipRequest.isDeleted == false) {
                     activeMembershipRequests++;
                 }
             })
@@ -168,7 +204,7 @@ export const DashboardScreen = ({navigation}) => {
                 
                 return (
                     <View key = {club._id} style = {styles.base}>
-                    <ScrollView key={club._id} contentContainerStyle={styles.card}>
+                    <View key={club._id} style={styles.card}>
                         <Text style={styles.clubName}>{club.name}</Text>
                         <Text style={styles.clubDescription}>{club.description}</Text>
                         <Text style={styles.interestMeetingStyle}>{InterestMeeting}</Text>
@@ -187,7 +223,7 @@ export const DashboardScreen = ({navigation}) => {
                                 }}>
                             <Text style = {styles.buttonText}>View Club</Text>
                         </TouchableOpacity>
-                    </ScrollView>
+                    </View>
                     </View>
                 );
             })}
@@ -215,6 +251,7 @@ function loadData() {
     const [clubsUserRegisterdFor, setClubsUserRegisterdFor] = useState([])
     const [advisorClubs, setAdvisorClubs] = useState([])
     const [clubMembershipRequests, setClubMembershipRequests] = useState([])
+    const [userMemberships, setUserMemberships] = useState([])
 
     const fetchUserId = async () => {
         const token = await AsyncStorage.getItem('token')
@@ -241,14 +278,16 @@ function loadData() {
         const clubsUserRegisterdFor = userMemberships.map(membership => membership.clubId)
         console.log(clubsUserRegisterdFor)
 
-        return clubsUserRegisterdFor
+        return userMemberships
     }
 
     const fetchData = async () => {
         const clubs = await clubService.list();
+        console.log(clubs)
         const advisorIds = clubs.map(club => club.advisorId);
         console.log(advisorIds)
         const advisors = await userService.getUsersFromIds(advisorIds);
+        console.log(advisors)
         
 
         const hydratedClubs = clubs.map(club => {
@@ -320,9 +359,9 @@ function loadData() {
         var clubMembershipRequests = advisorClubs.map(async club => {
             const clubMembershipRequests = await membershipService.getClubMembershipRequests(club._id)                  
             console.log(club._id)
-            console.log(await clubMembershipRequests)
+            console.log(clubMembershipRequests)
             
-            await clubMembershipRequests.map(async membershipRequest => {
+            clubMembershipRequests.map(async membershipRequest => {
                 var userData = await userService.getUserData(membershipRequest.userId);
                 
                 membershipRequest["userFirstName"] = userData.firstName
@@ -378,9 +417,9 @@ function loadData() {
                 return setIsLoading(false)
             })
         fetchMemberships()
-            .then((clubsUserRegisterdFor) => {
-                console.log(clubsUserRegisterdFor);
-                setClubsUserRegisterdFor(clubsUserRegisterdFor)
+            .then((userMemberships) => {
+                console.log(userMemberships);
+                setUserMemberships(userMemberships)
                 setIsLoading(false)
             })
             .catch((err) => {
@@ -410,7 +449,7 @@ function loadData() {
             })
     }, [])
 
-    return {isLoading, clubs, userId, user, userType, clubsUserRegisterdFor, advisorClubs, clubMembershipRequests}
+    return {isLoading, clubs, userId, user, userType, userMemberships, advisorClubs, clubMembershipRequests, userMemberships}
 }
 
 const styles = StyleSheet.create({
@@ -427,18 +466,17 @@ const styles = StyleSheet.create({
     },
     card: {
         alignSelf: 'center',
-        justifyContent: 'center',
         backgroundColor: appTextColor,
         borderRadius: 10,
-        margin: '3%',
+        marginTop: 30,
         width: '80%',
+        minHeight: 150,
         shadowColor: '#5A5A5A',
         shadowOffset: {width: 0, height: 0},
         shadowRadius: 15
     },
     clubName: {
-        marginHorizontal: 10,
-        marginTop: 10,
+        margin: 10,
         fontSize: 20,
         fontWeight: '800',
         width: '25%',
@@ -446,7 +484,7 @@ const styles = StyleSheet.create({
         textShadowOffset: { width: 2, height: 2 },
         textShadowRadius: 10,
         fontFamily: appFont,
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
     },
     clubDescription: {
         margin: 10,
@@ -530,7 +568,18 @@ const styles = StyleSheet.create({
     advisorFunctionTest: {
         color: 'red',
         fontWeight: '600'
-    }
+    },
+    fieldName: {
+        backgroundColor: appBackgroundColor,
+        color: appTextColor,
+        fontFamily: appFont,
+        marginTop: 20,
+        marginLeft: 20,
+        fontWeight: "900",
+        fontSize: 20,
+        textDecorationLine: 'underline',
+        flexWrap: 'wrap'
+      },
 });
 
 async function AdvisorDashboard() {

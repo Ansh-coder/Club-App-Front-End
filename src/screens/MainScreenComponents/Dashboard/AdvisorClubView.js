@@ -49,6 +49,8 @@ export const AdvisorClubView = ({route, navigation}) => {
         return response.json(); // parses JSON response into native JavaScript
     }
 
+    var noOfTimesRun = 1;
+
     const onSendRequest = async () => {
         console.log("Request Sent")
         console.log(clubName)
@@ -57,13 +59,26 @@ export const AdvisorClubView = ({route, navigation}) => {
         console.log(clubFee)
         console.log(clubInterestMeeting)
 
-        putData('http://localhost:3000/clubs' + clubId, { name: clubName, description: clubDescription, category: clubCategory, fee: clubFee, interestMeetingRequired: clubInterestMeeting })
+        putData('http://localhost:3000/clubs/' + clubId, { name: clubName, description: clubDescription, category: clubCategory, fee: clubFee, interestMeetingRequired: clubInterestMeeting })
             .then((data) => {
                 console.log(data); // JSON data parsed by `data.json()` call
         }).catch(error => console.log(error));
+
+        console.log(noOfTimesRun)
+        noOfTimesRun++;
     }
-    
-    return <View style = {styles.root}>
+
+    return <SafeAreaView style = {styles.root}>
+                  <TouchableOpacity
+              style={styles.editClubButton}
+              onPress={() => 
+                {
+                navigation.navigate("Edit Club Screen", {
+                    clubData: clubData
+                })
+                }}>
+              <Text style = {styles.buttonText}>Edit Club</Text>
+            </TouchableOpacity>
             {clubMembershipData.map(club => {
                 
                 var isInterestMeetingAttended;
@@ -71,7 +86,7 @@ export const AdvisorClubView = ({route, navigation}) => {
 
                 const onApprove = () => {
                     console.log('Approved!')
-                    putData('http://localhost:3000/memberships' + club._id, { registered: true, isDeleted: false })
+                    putData('http://localhost:3000/memberships/' + club._id, { registered: true, isDeleted: false })
                         .then((data) => {
                             console.log(data); // JSON data parsed by `data.json()` call
                     }).catch(error => console.log(error));
@@ -81,7 +96,7 @@ export const AdvisorClubView = ({route, navigation}) => {
                 const onReject = () => {
                     console.log('Rejected.')
                     
-                    putData('http://localhost:3000/memberships' + club._id, { isDeleted: true })
+                    putData('http://localhost:3000/memberships/' + club._id, { isDeleted: true })
                         .then((data) => {
                             console.log(data); // JSON data parsed by `data.json()` call
                     }).catch(error => console.log(error));
@@ -91,10 +106,10 @@ export const AdvisorClubView = ({route, navigation}) => {
                 if (club.interestMeetingAttended) { isInterestMeetingAttended = "Interest Meeting Attended" } else { isInterestMeetingAttended = "Interest Meeting Not Attended Yet"}
                 if (club.paid) { isFeePaid = "Fee Paid" } else { isFeePaid = "Fee Is Not Paid Yet"}
             
-            if( club.registered == false ) {
+            if( club.registered == false && club.isDeleted == false ) {
                 return (
-                    <View key={club._id} style = {styles.base}>
-                    <ScrollView key={club._id} contentContainerStyle={styles.card}>
+                    <ScrollView key={club._id} contentContainerStyle = {styles.base}>
+                    <View key={club._id} style={styles.card}>
                          <Text style={styles.clubName2}>{club.userFirstName}, {club.userLastName}</Text>
                         <Text style={styles.clubDescription2}>{isInterestMeetingAttended}</Text>
                         <Text style={styles.clubDescription2}>{isFeePaid}</Text>
@@ -108,66 +123,12 @@ export const AdvisorClubView = ({route, navigation}) => {
                             onPress={onReject}>
                             <Text style = {styles.buttonText}>Reject</Text>
                         </TouchableOpacity>
-                    </ScrollView>
                     </View>
+                    </ScrollView>
                 )
                 }
             })}
-            <SafeAreaView style = {styles.root2}>
-        <Text style = {styles.bigFieldName}>Edit Club</Text>
-        <Text style = {styles.fieldName}>Club Name</Text>
-        <TextInput
-          style={styles.clubName}
-          onChangeText={onChangeClubName}
-          value={clubName}
-          placeholder="What's your new club's name?"
-          placeholderTextColor = {appTextColor}
-        />
-        <Text style = {styles.fieldName}>Club Description</Text>
-        <TextInput
-          style={styles.clubDescription}
-          multiline={true}
-          onChangeText={onChangeClubDescription}
-          value={clubDescription}
-          placeholder="Write a short description of your club."
-          placeholderTextColor = {appTextColor}
-          right = {clubDescription.length}
-          maxLength = {500}
-        />
-        <Text style = {styles.fieldName}>Club Category</Text>
-        <Multiselect
-          style = {styles.dropdownStyle}
-          placeholder="Select a category"
-          data={clubCategoryTypes}
-          onChange = {onChangeClubCategory}
-          value = {clubCategory}
-        />
-        <Text style = {styles.fieldName}>Club Fee</Text>
-        <TextInput
-          style={styles.clubName}
-          onChangeText={onChangeClubFee}
-          value={clubFee}
-          placeholder="What's the fee for joining your club?"
-          placeholderTextColor = {appTextColor}
-          keyboardType='decimal-pad'
-        />
-        <Text style = {styles.fieldName}>Interest Meeting Required </Text>
-        <Switch
-          trackColor={{ false: appTextColor, true: appButtonColor }}
-          thumbColor={clubInterestMeeting ? appBackgroundColor : appTextColor}
-          ios_backgroundColor = {appTextColor}
-          onValueChange={interestMeetingToggled}
-          value={clubInterestMeeting}
-          style = {styles.toggle}
-        />
-        <TouchableOpacity 
-          onPress = {onSendRequest}
-          disabled = {clubName == "" || clubFee == "" || clubDescription == "" || clubCategory == ""}
-          style={clubName == "" || clubFee == "" || clubDescription == "" || clubCategory == "" ? styles.disabledSendRequestButton : styles.sendRequestButton}>
-            <Text style = {styles.buttonText}>Send Request to Admin</Text>
-        </TouchableOpacity>
-    </SafeAreaView>
-        </View>
+        </SafeAreaView>
 }
 
 const styles = StyleSheet.create({
@@ -193,6 +154,7 @@ const styles = StyleSheet.create({
         backgroundColor: appTextColor,
         borderRadius: 10,
         margin: '3%',
+        marginTop: 30,
         width: '80%',
         shadowColor: '#5A5A5A',
         shadowOffset: { width: 0, height: 0 },
@@ -337,7 +299,6 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         fontWeight: "900",
         fontSize: 20,
-        textDecorationLine: 'underline',
         flexWrap: 'wrap'
       },
       bigFieldName: {
@@ -348,7 +309,6 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         fontWeight: "900",
         fontSize: 30,
-        textDecorationLine: 'underline',
         flexWrap: 'wrap'
       },
       interestMeetingFieldName: {
@@ -359,7 +319,6 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         fontWeight: "900",
         fontSize: 20,
-        textDecorationLine: 'underline',
         flexDirection: 'row',
         flexWrap: 'wrap'
       },
@@ -410,4 +369,52 @@ const styles = StyleSheet.create({
         margin: 15,
         flexDirection: 'row',
       },
+      editClubButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: appButtonColor,
+        color: appTextColor,
+        height: 30,
+        width: 75,
+        marginLeft: '10%',
+        marginTop: 30,
+        borderRadius: 2,
+        fontFamily: appFont,
+        fontSize: 16,
+        shadowColor: '#5A5A5A',
+        shadowOffset: { width: 0, height: 0 },
+        shadowRadius: 15,
+      },
+      approveAllButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: appButtonColor,
+        color: appTextColor,
+        height: 30,
+        width: 75,
+        marginLeft: '10%',
+        marginTop: '5%',
+        borderRadius: 2,
+        fontFamily: appFont,
+        fontSize: 16,
+        shadowColor: '#5A5A5A',
+        shadowOffset: { width: 0, height: 0 },
+        shadowRadius: 15,
+      },
+      rejectAllButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: appButtonColor,
+        color: appTextColor,
+        height: 30,
+        width: 75,
+        marginLeft: '10%',
+        marginTop: '5%',
+        borderRadius: 2,
+        fontFamily: appFont,
+        fontSize: 16,
+        shadowColor: '#5A5A5A',
+        shadowOffset: { width: 0, height: 0 },
+        shadowRadius: 15,
+      }
 });

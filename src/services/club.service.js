@@ -45,6 +45,7 @@ async getClubsForAdvisor(advisorId) {
             'Authorization': 'jwt ' + this.token
         }
     })
+    console.log(advisorClubs)
 
     return advisorClubs.json()
 }

@@ -3,7 +3,7 @@ import React from 'react'
 import { appBackgroundColor, appButtonColor, appTextColor, appFont } from '../UniversalAppDesignVars'
 import { map } from 'lodash'
 
-const EditInfoComponent = ({titleArray, titleFieldContents, backEndFunction, backEndParameters}) => {
+const EditInfoComponent = ({titleArray, titleFieldContents, backEndFunction, backEndParameters, buttonTitle}) => {
     var mapData = {}
     console.log(titleArray)
     console.log(titleFieldContents)
@@ -81,7 +81,7 @@ const EditInfoComponent = ({titleArray, titleFieldContents, backEndFunction, bac
               style = {styles.logInButton}
               disabled = {!titleFieldContents}
               onPress = {backEndWork}>
-              <Text style = {styles.buttonText}>UPDATE CLUB</Text>
+              <Text style = {styles.buttonText}>{buttonTitle}</Text>
           </TouchableOpacity>
     </View>
 }

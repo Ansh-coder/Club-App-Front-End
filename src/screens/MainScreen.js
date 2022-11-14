@@ -1,5 +1,5 @@
-import { StyleSheet, Text, TouchableOpacity} from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import React, {useEffect, useState} from 'react'
 import { createDrawerNavigator, DrawerItem } from '@react-navigation/drawer';
 import DashboardScreen from './MainScreenComponents/DashboardScreen';
 import SettingsScreen from './MainScreenComponents/SettingsScreen';
@@ -9,7 +9,11 @@ import { CommonActions } from '@react-navigation/native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { AdvisorClubView } from './MainScreenComponents/Dashboard/AdvisorClubView';
 import { NewClubScreen } from './MainScreenComponents/Dashboard/NewClubScreen';
-import { appButtonColor, appTextColor, appFont } from '../UniversalAppDesignVars';
+import { JoinClubScreen } from './MainScreenComponents/Dashboard/JoinClubScreen';
+import { EditClubInfoScreen } from './MainScreenComponents/Dashboard/EditClubInfoScreen';
+import { appButtonColor, appTextColor, appFont, appBackgroundColor } from '../UniversalAppDesignVars';
+import jwtDecode from 'jwt-decode';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Drawer = createDrawerNavigator()
 
@@ -24,6 +28,10 @@ function logOutIcon () {
     />
 }
 
+const {userData, isLoading} = loadData()
+console.log(userData)
+
+
 
 
 
@@ -37,7 +45,15 @@ function logOutIcon () {
                       <DrawerItemList {...props} />
                            <DrawerItem 
                            label = 'Sign Out' 
-                           onPress={() => props.navigation.navigate("Log In")}
+                           
+                           onPress={() => navigation.dispatch(
+                            CommonActions.reset({
+                              index: 1,
+                              routes: [
+                                { name: 'Log In' },
+                              ],
+                            })
+                          )}
                            />
                     </DrawerContentScrollView>
               )
@@ -50,7 +66,10 @@ function logOutIcon () {
                           size = {iconSize}
                           color = 'black'
                         />
-                    )
+                    ),
+                    headerRight: () => (
+                      <Text style = {styles.welcomeStyle}>Welcome, {userData.name}!</Text>
+                  )
                 }}
             />
             <Drawer.Screen name = 'Settings' component={SettingsScreen}
@@ -127,11 +146,99 @@ function logOutIcon () {
                     )
                 }}
             />
+            <Drawer.Screen name = "Join Club Screen"  component={JoinClubScreen}
+                options = {{
+                    drawerItemStyle: { height: 0 },
+                    title: "",
+                    headerRight: () => (
+                        <TouchableOpacity 
+                        style = {styles.signUpButton}
+                        onPress={() =>
+                            navigation.dispatch(
+                              CommonActions.reset({
+                                index: 1,
+                                routes: [
+                                  {
+                                    name: 'Join Club Screen',
+                                  },
+                                  { name: 'Dashboard' },
+                                ],
+                              })
+                            )
+                          }
+                        >
+                            <Text style = {styles.buttonText}>Return to Dashboard</Text>
+                      </TouchableOpacity>
+                    )
+                }}
+            />
+            <Drawer.Screen name = "Edit Club Screen"  component={EditClubInfoScreen}
+                options = {{
+                    drawerItemStyle: { height: 0 },
+                    title: "",
+                    headerRight: () => (
+                      <TouchableOpacity 
+                      style = {styles.signUpButton}
+                      onPress={() =>
+                          navigation.dispatch(
+                            CommonActions.reset({
+                              index: 1,
+                              routes: [
+                                {
+                                  name: 'Edit Club Screen',
+                                },
+                                { name: 'Dashboard' },
+                              ],
+                            })
+                          )
+                        }
+                      >
+                            <Text style = {styles.buttonText}>Return to Dashboard</Text>
+                      </TouchableOpacity>
+                    )
+                }}
+            />
           </Drawer.Navigator>
         </>
       )
   }
 
+  function loadData() {
+    const [userData, setUserData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const fetchUserId = async () => {
+        const token = await AsyncStorage.getItem('token')
+        var userData = jwtDecode(token)
+
+
+        return userData
+    }
+
+   
+        
+    
+
+    useEffect(() => {
+        setIsLoading(true)
+
+        fetchUserId()
+            .then((userData) => {
+                console.log(userData);
+                setUserData(userData)
+                setIsLoading(false)
+            })
+            .catch((err) => {
+                console.log(err)
+                return setIsLoading(false)
+            })
+
+
+    }, [])
+
+    return {userData, isLoading}
+}
+  
 export default MainScreen
 
 const styles = StyleSheet.create({
@@ -140,7 +247,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: appButtonColor,
         color: appTextColor,
-        width: 150,
+        padding: 10,
         height: 40,
         borderRadius: 2,
         fontFamily: appFont,
@@ -150,7 +257,19 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 0 },
         shadowRadius: 17,
     },
+    welcomeStyle: {
+      justifyContent: "center",
+      alignItems: "center",
+      color: appBackgroundColor,
+      fontFamily: appFont,
+      marginRight: '4%',
+      textShadowColor: appBackgroundColor,
+      fontSize: 20,
+      fontWeight: '500',
+      textShadowOffset: { width: 2, height: 2 },
+      textShadowRadius: 15,
+  },
     buttonText: {
         fontFamily: appFont
-    }
+    },
 })
