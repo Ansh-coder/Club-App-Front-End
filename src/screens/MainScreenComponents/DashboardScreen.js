@@ -632,7 +632,7 @@ async function StudentDashboard(isLoading) {
                 console.log(userId)
                 console.log(clubId)
 
-                postData('http://localhost:3000/memberships', {userId, clubId, interestMeetingAttended, paid}, token)
+                postData(`${AppConfig.apiUrl}/memberships`, {userId, clubId, interestMeetingAttended, paid}, token)
                     .then((data) => {
                         console.log(data); // JSON data parsed by `data.json()` call
                     }).catch(error => console.log(error));

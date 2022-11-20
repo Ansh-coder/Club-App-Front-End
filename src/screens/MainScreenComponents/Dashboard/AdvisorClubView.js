@@ -59,7 +59,7 @@ export const AdvisorClubView = ({route, navigation}) => {
         console.log(clubFee)
         console.log(clubInterestMeeting)
 
-        putData('http://localhost:3000/clubs/' + clubId, { name: clubName, description: clubDescription, category: clubCategory, fee: clubFee, interestMeetingRequired: clubInterestMeeting })
+        putData(`${AppConfig.apiUrl}/clubs/` + clubId, { name: clubName, description: clubDescription, category: clubCategory, fee: clubFee, interestMeetingRequired: clubInterestMeeting })
             .then((data) => {
                 console.log(data); // JSON data parsed by `data.json()` call
         }).catch(error => console.log(error));
@@ -86,7 +86,7 @@ export const AdvisorClubView = ({route, navigation}) => {
 
                 const onApprove = () => {
                     console.log('Approved!')
-                    putData('http://localhost:3000/memberships/' + club._id, { registered: true, isDeleted: false })
+                    putData(`${AppConfig.apiUrl}/memberships/` + club._id, { registered: true, isDeleted: false })
                         .then((data) => {
                             console.log(data); // JSON data parsed by `data.json()` call
                     }).catch(error => console.log(error));
@@ -96,7 +96,7 @@ export const AdvisorClubView = ({route, navigation}) => {
                 const onReject = () => {
                     console.log('Rejected.')
                     
-                    putData('http://localhost:3000/memberships/' + club._id, { isDeleted: true })
+                    putData(`${AppConfig.apiUrl}/memberships/` + club._id, { isDeleted: true })
                         .then((data) => {
                             console.log(data); // JSON data parsed by `data.json()` call
                     }).catch(error => console.log(error));

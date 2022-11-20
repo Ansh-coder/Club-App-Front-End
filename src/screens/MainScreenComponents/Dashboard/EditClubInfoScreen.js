@@ -49,7 +49,7 @@ export const EditClubInfoScreen = ({route, navigation}) => {
       putData('http://localhost:3000/clubs/' + clubId, { name: clubName, description: clubDescription, category: clubCategory, fee: clubFee, interestMeetingRequired: clubInterestMeeting })
           .then((data) => {
               console.log(data); // JSON data parsed by `data.json()` call
-      }).catch(error => console.log(error));
+      }).catch(error => console.log(error))
 
     }
 
@@ -252,6 +252,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     color: appTextColor,
     fontFamily: appFont,
+    outlineStyle: 'none'
   },
   clubDescription: {
     width: '75%',
@@ -268,6 +269,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingVertical: 10,
     paddingHorizontal: 10,
+    outlineStyle: 'none'
   },
   fieldName: {
     backgroundColor: appBackgroundColor,

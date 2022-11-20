@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Logo from '../../../assets/favicon.png';
 import React from 'react'
 import {appBackgroundColor, appButtonColor, appTextColor, appFont} from '../../UniversalAppDesignVars'
+import { AppConfig } from '../../../config';
 
 
 function LogInScreen ( {navigation}) {
@@ -18,7 +19,7 @@ const onSubmit = async () => {
   console.log(password)
 
 
-      const login = await fetch('http://localhost:3000/users/login?' + new URLSearchParams({
+      const login = await fetch(`${AppConfig.apiUrl}/users/login?` + new URLSearchParams({
           email: email,
           password: password,
 
@@ -116,6 +117,7 @@ const styles = StyleSheet.create ({
       margin: 15,
       color: appTextColor,
       fontFamily: appFont,
+      outlineStyle: 'none'
     },
     signUpButton: {
       justifyContent: "center",

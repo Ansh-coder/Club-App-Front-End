@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, TextInput } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, TextInput, Image } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { appBackgroundColor, appButtonColor, appTextColor, appFont } from '../../../UniversalAppDesignVars'
@@ -9,6 +9,8 @@ import jwtDecode from 'jwt-decode'
 import { unstable_renderSubtreeIntoContainer } from 'react-dom'
 import { now } from 'lodash'
 import { Multiselect } from 'react-widgets'
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import Popup from 'reactjs-popup'
 
 export const JoinClubScreen = () => {
 const {isLoading, clubs, userId, user, userType, advisorClubs, clubMembershipRequests, userMemberships} = loadData();
@@ -50,6 +52,12 @@ async function postData(url = '', data = {}) {
     return response.json(); // parses JSON response into native JavaScript
 }
 
+const onFiltersClick = () => {
+    console.log('I clicked it.')
+}
+
+var officiallyRegisteredClubs
+
   return (
     <View style = {styles.dashboardScreenStyle}>
         <View style = {styles.searchFieldOverStyle}>
@@ -60,20 +68,22 @@ async function postData(url = '', data = {}) {
                 placeholder="Search a club..."
                 placeholderTextColor = {appTextColor}
             />
-            <Multiselect
-                style = {styles.dropdownStyle}
-                placeholder="Category"
-                data={clubCategoryTypes}
-                onChange = {onChangeClubCategory}
-                value = {clubCategory}
-            />
-            <TextInput
-                style={styles.feeInput}
-                onChangeText={onChangeClubFee}
-                value={clubFee}
-                placeholder="Fee"
-                placeholderTextColor = {appTextColor}
-            />
+            <Popup 
+            trigger = {
+                <TouchableOpacity>
+                    <Ionicons
+                    name="filter"
+                    size = {25}
+                    color = {appButtonColor}
+                    style = {styles.clickImageStyle}
+                    />
+                </TouchableOpacity>
+            }
+            position = 'center center'
+            >
+                <Text style = {styles.buttonText}>Popup worked!</Text>
+            </Popup>
+
         </View>
       {clubs.map(club => {
         var isRegistrationRequestSent = false;
@@ -115,6 +125,18 @@ async function postData(url = '', data = {}) {
             isRegisteredOrNot = true
         }
 
+        var matchesSearch = false
+
+        console.log(searchQuery.length)
+        console.log(searchQuery.substring(0,2))
+        var cleanedSearchQuery = searchQuery.toLowerCase().replace(/ /g, '')
+        for (let index = 0; index < club.name.length; index++) {
+            if(cleanedSearchQuery == club.name.toLowerCase().replace(/ /g, '').substring(index, cleanedSearchQuery.length + index) || cleanedSearchQuery == '')
+            {
+                matchesSearch = true
+            }
+        }
+
         if (isRegistrationRequestSent == true && userMemberships[clubIndex].registered == false) {
             regStatus = "Registration Request Already Sent"
         } else regStatus = null
@@ -137,7 +159,7 @@ async function postData(url = '', data = {}) {
                 userClubIds.push(clubId)
             }
         }
-if(isRegisteredOrNot) {
+if(isRegisteredOrNot && matchesSearch) {
         return(
                 <View key = {club._id} style = {styles.base}>
                     <ScrollView key={club._id} contentContainerStyle={styles.card}>
@@ -367,7 +389,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: appTextColor,
         borderRadius: 10,
-        marginTop: 30,
+        marginBottom: 30,
         width: '80%',
         shadowColor: '#5A5A5A',
         shadowOffset: {width: 0, height: 0},
@@ -386,20 +408,16 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap'
     },
     searchDesign: {
-        width: '35%',
         height: 40,
         backgroundColor: appBackgroundColor,
         paddingVertical: 10,
         paddingHorizontal: 10,
-        borderColor: appButtonColor,
-        borderBottomWidth: 3,
         fontSize: 16,
-        marginTop: 5,
-        marginBottom: 15,
         marginLeft: 15,
         color: appTextColor,
         fontFamily: appFont,
-        flex: 3
+        flex: 1,
+        outlineStyle: 'none'
     },
     feeInput: {
         width: '10%',
@@ -527,9 +545,16 @@ const styles = StyleSheet.create({
       },
     searchFieldOverStyle: {
         flexDirection: 'row',
-        flexWrap: 'wrap',
         justifyContent: 'space-evenly',
         alignItems: 'center',
+        borderColor: appButtonColor,
+        borderBottomWidth: 3,
+        width: '80%',
+        alignSelf: 'center',
         marginTop: 30,
+        marginBottom: 30
+    },
+    clickImageStyle: {
+        marginRight: 15
     }
 });
